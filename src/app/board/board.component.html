@@ -1,0 +1,44 @@
+<div cdkDropListGroup>
+  <div class="row">
+    <div class="col-sm-4">
+      <h2>To do</h2>
+      <div
+        cdkDropList
+        [cdkDropListData]="ticketsToDo"
+        (cdkDropListDropped)="drop($event)"
+        class="list"
+      >
+        <div class="ticket" *ngFor="let ticketToDo of ticketsToDo" cdkDrag>
+          {{ asTicket(ticketToDo).content }}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-4">
+      <h2>To Test</h2>
+      <div
+        cdkDropList
+        [cdkDropListData]="ticketsToTest"
+        (cdkDropListDropped)="drop($event)"
+        class="list"
+      >
+        <div class="ticket" *ngFor="let ticketToTest of ticketsToTest" cdkDrag>
+          {{ asTicket(ticketToTest).content }}
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4">
+      <h2>Done</h2>
+      <div
+        cdkDropList
+        [cdkDropListData]="doneTickets"
+        (cdkDropListDropped)="drop($event)"
+        class="list"
+      >
+        <div class="ticket" *ngFor="let doneTicket of doneTickets" cdkDrag>
+          {{ asTicket(doneTicket).content }}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
