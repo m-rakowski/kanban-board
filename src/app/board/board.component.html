@@ -3,41 +3,62 @@
     <div class="col-sm-4">
       <h2>To do</h2>
       <div
+        id="toDo"
         cdkDropList
         [cdkDropListData]="ticketsToDo"
         (cdkDropListDropped)="drop($event)"
         class="list"
       >
-        <div class="ticket" *ngFor="let ticketToDo of ticketsToDo" cdkDrag>
-          {{ asTicket(ticketToDo).content }}
+        <div
+          class="ticket"
+          *ngFor="let ticketToDo of ticketsToDo"
+          cdkDrag
+          [cdkDragData]="ticketToDo"
+        >
+          {{ asTicket(ticketToDo).title }}
         </div>
+        <button mat-button (click)="addTicket()">+</button>
       </div>
     </div>
 
     <div class="col-sm-4">
       <h2>To Test</h2>
       <div
+        id="toTest"
         cdkDropList
         [cdkDropListData]="ticketsToTest"
         (cdkDropListDropped)="drop($event)"
         class="list"
       >
-        <div class="ticket" *ngFor="let ticketToTest of ticketsToTest" cdkDrag>
-          {{ asTicket(ticketToTest).content }}
+        <div
+          class="ticket"
+          *ngFor="let ticketToTest of ticketsToTest"
+          cdkDrag
+          [cdkDragData]="ticketToTest"
+        >
+          {{ asTicket(ticketToTest).title }}
         </div>
+        <button mat-button (click)="addTicket()">+</button>
       </div>
     </div>
     <div class="col-sm-4">
       <h2>Done</h2>
       <div
+        id="done"
         cdkDropList
         [cdkDropListData]="doneTickets"
         (cdkDropListDropped)="drop($event)"
         class="list"
       >
-        <div class="ticket" *ngFor="let doneTicket of doneTickets" cdkDrag>
-          {{ asTicket(doneTicket).content }}
+        <div
+          class="ticket"
+          *ngFor="let doneTicket of doneTickets"
+          cdkDrag
+          [cdkDragData]="doneTicket"
+        >
+          {{ asTicket(doneTicket).title }}
         </div>
+        <button mat-button (click)="addTicket()">+</button>
       </div>
     </div>
   </div>

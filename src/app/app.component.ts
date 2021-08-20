@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Ticket } from './models/ticket';
-import { addTicket } from './customer/store/action/ticket.actions';
+import { Ticket, TicketStatus } from './models/ticket';
+import { addTicketAction } from './customer/store/action/ticket.actions';
 import { v4 as uuidv4 } from 'uuid';
 
 @Component({
@@ -12,14 +12,82 @@ import { v4 as uuidv4 } from 'uuid';
 export class AppComponent implements OnInit {
   constructor(private store: Store<Ticket>) {}
 
-  tickets: Ticket[] = [];
-
   ngOnInit(): void {
-    this.store.subscribe((abc) => console.log(abc));
-  }
+    setTimeout(() => {
+      this.store.dispatch(
+        addTicketAction({
+          ticket: {
+            id: uuidv4(),
+            title:
+              '[backend] implement a backend API for saving and deleting tickets',
+            content: '',
+            status: TicketStatus.TO_DO,
+          },
+        })
+      );
+      this.store.dispatch(
+        addTicketAction({
+          ticket: {
+            id: uuidv4(),
+            title: '[backend] install app on firebase',
+            content: '',
+            status: TicketStatus.TO_DO,
+          },
+        })
+      );
 
-  add() {
-    const ticket: Ticket = { id: uuidv4(), content: 'do this and that' };
-    this.store.dispatch(addTicket({ ticket }));
+      this.store.dispatch(
+        addTicketAction({
+          ticket: {
+            id: uuidv4(),
+            title: '[frontend] connect the board to the API',
+            content: '',
+            status: TicketStatus.TO_DO,
+          },
+        })
+      );
+      this.store.dispatch(
+        addTicketAction({
+          ticket: {
+            id: uuidv4(),
+            title: '[frontend] modal for adding tickets',
+            content: '',
+            status: TicketStatus.TO_DO,
+          },
+        })
+      );
+      this.store.dispatch(
+        addTicketAction({
+          ticket: {
+            id: uuidv4(),
+            title: '[frontend] X for deleting tickets',
+            content: '',
+            status: TicketStatus.TO_DO,
+          },
+        })
+      );
+
+      this.store.dispatch(
+        addTicketAction({
+          ticket: {
+            id: uuidv4(),
+            title: '[frontend] install redux',
+            content: '',
+            status: TicketStatus.DONE,
+          },
+        })
+      );
+
+      this.store.dispatch(
+        addTicketAction({
+          ticket: {
+            id: uuidv4(),
+            title: '[frontend] create a drag-and-drop list',
+            content: '',
+            status: TicketStatus.DONE,
+          },
+        })
+      );
+    }, 100);
   }
 }

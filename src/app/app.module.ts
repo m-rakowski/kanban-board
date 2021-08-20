@@ -52,13 +52,16 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTreeModule } from '@angular/material/tree';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { AddEditTicketDialogComponent } from './add-edit-ticket-dialog/add-edit-ticket-dialog.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [AppComponent, BoardComponent],
+  declarations: [AppComponent, BoardComponent, AddEditTicketDialogComponent],
   imports: [
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
-    StoreModule.forRoot({ tickets: ticketsReducers }),
+    StoreModule.forRoot({ ticketsFeature: ticketsReducers }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     BrowserAnimationsModule,
     A11yModule,
