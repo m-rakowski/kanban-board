@@ -56,9 +56,15 @@ import { AddEditTicketDialogComponent } from './add-edit-ticket-dialog/add-edit-
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SwimlaneComponent } from './swimlane/swimlane.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [AppComponent, BoardComponent, AddEditTicketDialogComponent, SwimlaneComponent],
+  declarations: [
+    AppComponent,
+    BoardComponent,
+    AddEditTicketDialogComponent,
+    SwimlaneComponent,
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -111,6 +117,7 @@ import { SwimlaneComponent } from './swimlane/swimlane.component';
     OverlayModule,
     PortalModule,
     ScrollingModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
