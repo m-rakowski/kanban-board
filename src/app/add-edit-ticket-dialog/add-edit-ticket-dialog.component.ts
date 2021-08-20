@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Ticket } from '../models/ticket';
 
 @Component({
   selector: 'app-add-edit-ticket-dialog',
@@ -12,7 +13,14 @@ export class AddEditTicketDialogComponent implements OnInit {
   content = new FormControl(null, [Validators.required]);
   formGroup: FormGroup;
 
-  constructor(private dialogRef: MatDialogRef<AddEditTicketDialogComponent>) {
+  constructor(
+    private dialogRef: MatDialogRef<AddEditTicketDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { ticket: Ticket }
+  ) {
+    if (data?.ticket) {
+      this.title.patchValue(data.ticket.title);
+      this.content.patchValue(data.ticket.content);
+    }
     this.formGroup = new FormGroup({
       title: this.title,
       content: this.content,
@@ -23,7 +31,7 @@ export class AddEditTicketDialogComponent implements OnInit {
 
   saveAndClose() {
     if (this.formGroup.valid) {
-      this.dialogRef.close({ ticket: this.formGroup.value });
+      this.dialogRef.close(this.formGroup.value);
     } else {
       this.formGroup.markAllAsTouched();
     }

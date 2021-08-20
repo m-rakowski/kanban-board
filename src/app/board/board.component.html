@@ -1,65 +1,28 @@
 <div cdkDropListGroup>
   <div class="row">
     <div class="col-sm-4">
-      <h2>To do</h2>
-      <div
-        id="toDo"
-        cdkDropList
-        [cdkDropListData]="ticketsToDo"
-        (cdkDropListDropped)="drop($event)"
-        class="list"
-      >
-        <div
-          class="ticket"
-          *ngFor="let ticketToDo of ticketsToDo"
-          cdkDrag
-          [cdkDragData]="ticketToDo"
-        >
-          {{ asTicket(ticketToDo).title }}
-        </div>
-        <button mat-button (click)="addTicket(TicketStatus.TO_DO)">+</button>
-      </div>
-    </div>
-
-    <div class="col-sm-4">
-      <h2>To Test</h2>
-      <div
-        id="toTest"
-        cdkDropList
-        [cdkDropListData]="ticketsToTest"
-        (cdkDropListDropped)="drop($event)"
-        class="list"
-      >
-        <div
-          class="ticket"
-          *ngFor="let ticketToTest of ticketsToTest"
-          cdkDrag
-          [cdkDragData]="ticketToTest"
-        >
-          {{ asTicket(ticketToTest).title }}
-        </div>
-        <button mat-button (click)="addTicket(TicketStatus.TO_TEST)">+</button>
-      </div>
+      <app-swimlane
+        [id]="'toDo'"
+        [status]="TicketStatus.TO_DO"
+        [title]="'To Do'"
+        [tickets]="ticketsToDo"
+      ></app-swimlane>
     </div>
     <div class="col-sm-4">
-      <h2>Done</h2>
-      <div
-        id="done"
-        cdkDropList
-        [cdkDropListData]="doneTickets"
-        (cdkDropListDropped)="drop($event)"
-        class="list"
-      >
-        <div
-          class="ticket"
-          *ngFor="let doneTicket of doneTickets"
-          cdkDrag
-          [cdkDragData]="doneTicket"
-        >
-          {{ asTicket(doneTicket).title }}
-        </div>
-        <button mat-button (click)="addTicket(TicketStatus.DONE)">+</button>
-      </div>
+      <app-swimlane
+        [id]="'toTest'"
+        [status]="TicketStatus.TO_TEST"
+        [title]="'To Test'"
+        [tickets]="ticketsToTest"
+      ></app-swimlane>
+    </div>
+    <div class="col-sm-4">
+      <app-swimlane
+        [id]="'done'"
+        [status]="TicketStatus.DONE"
+        [title]="'Done'"
+        [tickets]="doneTickets"
+      ></app-swimlane>
     </div>
   </div>
 </div>

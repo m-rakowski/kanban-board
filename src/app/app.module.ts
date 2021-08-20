@@ -55,9 +55,10 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { AddEditTicketDialogComponent } from './add-edit-ticket-dialog/add-edit-ticket-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { SwimlaneComponent } from './swimlane/swimlane.component';
 
 @NgModule({
-  declarations: [AppComponent, BoardComponent, AddEditTicketDialogComponent],
+  declarations: [AppComponent, BoardComponent, AddEditTicketDialogComponent, SwimlaneComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,

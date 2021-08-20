@@ -31,6 +31,7 @@ export class BoardComponent implements OnInit, OnDestroy {
   private onDestroySubject = new Subject();
 
   TicketStatus = TicketStatus;
+
   ngOnInit(): void {
     this.store
       .select(selectDoneTickets)
@@ -46,61 +47,11 @@ export class BoardComponent implements OnInit, OnDestroy {
       .subscribe((tickets) => (this.ticketsToDo = tickets));
   }
 
-  private getTicketStatusFromId(
-    previousContainer: CdkDropList<Ticket[]>
-  ): TicketStatus {
-    switch (previousContainer.id) {
-      case 'toDo':
-        return TicketStatus.TO_DO;
-      case 'toTest':
-        return TicketStatus.TO_TEST;
-      case 'done':
-        return TicketStatus.DONE;
-      default:
-        return TicketStatus.TO_TEST;
-    }
-  }
-
   doneTickets: Ticket[] = [];
   ticketsToTest: Ticket[] = [];
   ticketsToDo: Ticket[] = [];
 
-  constructor(public dialog: MatDialog, private store: Store<AppState>) {}
-
-  drop(event: CdkDragDrop<Ticket[]>) {
-    this.store.dispatch(
-      moveItemAction({
-        what: event.item.data,
-        whereTo: {
-          listName: event.container.id,
-          elementIndex: event.currentIndex,
-        },
-        whereFrom: {
-          listName: event.previousContainer.id,
-          elementIndex: event.previousIndex,
-        },
-      })
-    );
-  }
-
-  asTicket(ticket: Ticket): Ticket {
-    return ticket;
-  }
-
-  addTicket(ticketStatus: TicketStatus) {
-    const dialogRef = this.dialog.open(AddEditTicketDialogComponent, {
-      width: '250px',
-    });
-
-    dialogRef.afterClosed().subscribe((ticket: { ticket: Ticket }) => {
-      ticket.ticket.status = ticketStatus;
-      this.saveTicket(ticket.ticket);
-    });
-  }
-
-  private saveTicket(ticket: Ticket) {
-    this.store.dispatch(addTicketAction({ ticket }));
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnDestroy(): void {
     this.onDestroySubject.next();

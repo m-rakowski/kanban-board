@@ -1,0 +1,19 @@
+<h2>{{ title }}</h2>
+<div
+  [id]="id"
+  cdkDropList
+  [cdkDropListData]="tickets"
+  (cdkDropListDropped)="drop($event)"
+  class="list"
+>
+  <div
+    class="ticket"
+    *ngFor="let ticket of tickets"
+    cdkDrag
+    [cdkDragData]="ticket"
+    (click)="editTicket(ticket)"
+  >
+    {{ asTicket(ticket).title }}
+  </div>
+  <button mat-button (click)="addTicket(status)">+</button>
+</div>
