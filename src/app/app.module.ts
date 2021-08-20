@@ -54,10 +54,12 @@ import { MatTreeModule } from '@angular/material/tree';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { AddEditTicketDialogComponent } from './add-edit-ticket-dialog/add-edit-ticket-dialog.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [AppComponent, BoardComponent, AddEditTicketDialogComponent],
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,

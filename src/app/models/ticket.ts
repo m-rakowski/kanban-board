@@ -1,7 +1,7 @@
 export enum TicketStatus {
-  TO_DO = 'TO_DO',
-  TO_TEST = 'TO_TEST',
-  DONE = 'DONE',
+  TO_DO = 'toDo',
+  TO_TEST = 'toTest',
+  DONE = 'done',
 }
 
 export interface Ticket {

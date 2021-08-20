@@ -36,25 +36,13 @@ function getListFromId(listName: string, state: TicketsState): Ticket[] {
 export const ticketsReducers = createReducer<TicketsState>(
   initialState,
   on(addTicketAction, (state, action) => {
-    if (action.ticket.status === TicketStatus.TO_DO) {
-      return {
-        ...state,
-        toDo: [...state.toDo, addIdToTicket(action.ticket)],
-      };
-    } else if (action.ticket.status === TicketStatus.TO_TEST) {
-      return {
-        ...state,
-        toDo: [...state.toTest, addIdToTicket(action.ticket)],
-      };
-    } else if (action.ticket.status === TicketStatus.DONE) {
-      return {
-        ...state,
-        done: [...state.done, addIdToTicket(action.ticket)],
-      };
-    } else
-      return {
-        ...state,
-      };
+    return {
+      ...state,
+      [action.ticket.status]: [
+        ...state[action.ticket.status],
+        addIdToTicket(action.ticket),
+      ],
+    };
   }),
   on(moveItemAction, (state, action) => {
     const newState = JSON.parse(JSON.stringify(state));

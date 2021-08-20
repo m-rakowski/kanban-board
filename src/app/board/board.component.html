@@ -17,7 +17,7 @@
         >
           {{ asTicket(ticketToDo).title }}
         </div>
-        <button mat-button (click)="addTicket()">+</button>
+        <button mat-button (click)="addTicket(TicketStatus.TO_DO)">+</button>
       </div>
     </div>
 
@@ -38,7 +38,7 @@
         >
           {{ asTicket(ticketToTest).title }}
         </div>
-        <button mat-button (click)="addTicket()">+</button>
+        <button mat-button (click)="addTicket(TicketStatus.TO_TEST)">+</button>
       </div>
     </div>
     <div class="col-sm-4">
@@ -58,7 +58,7 @@
         >
           {{ asTicket(doneTicket).title }}
         </div>
-        <button mat-button (click)="addTicket()">+</button>
+        <button mat-button (click)="addTicket(TicketStatus.DONE)">+</button>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -8,8 +8,8 @@ import { MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./add-edit-ticket-dialog.component.scss'],
 })
 export class AddEditTicketDialogComponent implements OnInit {
-  title = new FormControl();
-  content = new FormControl();
+  title = new FormControl(null, [Validators.required]);
+  content = new FormControl(null, [Validators.required]);
   formGroup: FormGroup;
 
   constructor(private dialogRef: MatDialogRef<AddEditTicketDialogComponent>) {
@@ -22,6 +22,10 @@ export class AddEditTicketDialogComponent implements OnInit {
   ngOnInit(): void {}
 
   saveAndClose() {
-    this.dialogRef.close({ ticket: this.formGroup.value });
+    if (this.formGroup.valid) {
+      this.dialogRef.close({ ticket: this.formGroup.value });
+    } else {
+      this.formGroup.markAllAsTouched();
+    }
   }
 }

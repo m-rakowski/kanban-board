@@ -30,6 +30,7 @@ export interface AppState {
 export class BoardComponent implements OnInit, OnDestroy {
   private onDestroySubject = new Subject();
 
+  TicketStatus = TicketStatus;
   ngOnInit(): void {
     this.store
       .select(selectDoneTickets)
@@ -86,12 +87,13 @@ export class BoardComponent implements OnInit, OnDestroy {
     return ticket;
   }
 
-  addTicket() {
+  addTicket(ticketStatus: TicketStatus) {
     const dialogRef = this.dialog.open(AddEditTicketDialogComponent, {
       width: '250px',
     });
 
     dialogRef.afterClosed().subscribe((ticket: { ticket: Ticket }) => {
+      ticket.ticket.status = ticketStatus;
       this.saveTicket(ticket.ticket);
     });
   }

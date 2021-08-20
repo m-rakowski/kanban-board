@@ -2,10 +2,12 @@
   <form [formGroup]="formGroup" (ngSubmit)="saveAndClose()">
     <mat-form-field>
       <input matInput placeholder="Title" [formControl]="title" />
+      <mat-error>{{ formGroup.get("title")?.errors | json }}</mat-error>
     </mat-form-field>
     <mat-form-field>
       <textarea matInput placeholder="Content" [formControl]="content">
       </textarea>
+      <mat-error>{{ formGroup.get("title")?.errors | json }}</mat-error>
     </mat-form-field>
     <button mat-stroked-button type="submit">Save</button>
   </form>
