@@ -4,7 +4,7 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
   addTicketAction,
   moveItemAction,
-} from '../customer/store/action/ticket.actions';
+} from '../store/actions/ticket.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { AppState } from '../board/board.component';

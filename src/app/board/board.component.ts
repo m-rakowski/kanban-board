@@ -6,15 +6,15 @@ import { AddEditTicketDialogComponent } from '../add-edit-ticket-dialog/add-edit
 import {
   addTicketAction,
   moveItemAction,
-} from '../customer/store/action/ticket.actions';
+} from '../store/actions/ticket.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
-import { TicketsState } from '../customer/store/reducer/ticket.reducer';
+import { TicketsState } from '../store/reducers/ticket.reducers';
 import {
   selectDoneTickets,
   selectTicketsToDo,
   selectTicketsToTest,
-} from '../customer/store/selectors/tickets.selector';
+} from '../store/selectors/ticket.selectors';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 

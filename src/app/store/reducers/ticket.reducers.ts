@@ -1,6 +1,10 @@
 import { createReducer, on } from '@ngrx/store';
-import { Ticket, TicketStatus } from '../../../models/ticket';
-import { addTicketAction, moveItemAction } from '../action/ticket.actions';
+import { Ticket, TicketStatus } from '../../models/ticket';
+import {
+  addTicketAction,
+  loadAllTicketsSuccessAction,
+  moveItemAction,
+} from '../actions/ticket.actions';
 import { v4 as uuidv4 } from 'uuid';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
@@ -42,6 +46,21 @@ export const ticketsReducers = createReducer<TicketsState>(
         ...state[action.ticket.status],
         addIdToTicket(action.ticket),
       ],
+    };
+  }),
+  on(loadAllTicketsSuccessAction, (state, action) => {
+    console.log(action);
+    return {
+      ...state,
+      toDo: action.tickets.filter(
+        (ticket) => ticket.status === TicketStatus.TO_DO
+      ),
+      toTest: action.tickets.filter(
+        (ticket) => ticket.status === TicketStatus.TO_TEST
+      ),
+      done: action.tickets.filter(
+        (ticket) => ticket.status === TicketStatus.DONE
+      ),
     };
   }),
   on(moveItemAction, (state, action) => {

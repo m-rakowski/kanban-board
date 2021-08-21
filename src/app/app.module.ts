@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { environment } from '../environments/environment';
-import { ticketsReducers } from './customer/store/reducer/ticket.reducer';
+import { ticketsReducers } from './store/reducers/ticket.reducers';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { BoardComponent } from './board/board.component';
@@ -57,6 +57,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SwimlaneComponent } from './swimlane/swimlane.component';
 import { HttpClientModule } from '@angular/common/http';
+import { EffectsModule } from '@ngrx/effects';
+import { TicketEffects } from './store/effects/ticket.effects';
 
 @NgModule({
   declarations: [
@@ -70,6 +72,7 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
+    EffectsModule.forRoot([TicketEffects]),
     StoreModule.forRoot({ ticketsFeature: ticketsReducers }),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     BrowserAnimationsModule,

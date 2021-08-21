@@ -1,5 +1,5 @@
 {
-  "toDo": [
+  "tickets": [
     {
       "id": "59934e14-7695-4584-9951-9de4f58b375f",
       "title": "[backend] implement a backend API for saving and deleting tickets",
@@ -29,10 +29,7 @@
       "title": "[frontend] X for deleting tickets",
       "content": "",
       "status": "toDo"
-    }
-  ],
-  "toTest": [],
-  "done": [
+    },
     {
       "id": "5794de8f-760b-4232-a843-6ff38b984d0d",
       "title": "[frontend] install redux",
