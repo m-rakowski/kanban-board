@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
-
 export enum TicketStatus {
   TO_DO = 'toDo',
   TO_TEST = 'toTest',
@@ -20,7 +18,7 @@ export interface Ticket {
   status: TicketStatus;
 }
 
-export interface TicketDTO extends Ticket {
+export interface FullTicket extends Ticket {
   id: string;
   nextId: string;
   previousId: string;

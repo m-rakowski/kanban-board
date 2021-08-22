@@ -1,9 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { Ticket, TicketStatus } from '../models/ticket';
+import { FullTicket, Ticket, TicketStatus } from '../models/ticket';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
   addTicketAction,
+  deleteTicketAction,
   moveItemAction,
+  updateTicketAction,
 } from '../store/actions/ticket.actions';
 import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
@@ -19,11 +21,11 @@ export class SwimlaneComponent {
   @Input() title = '';
   @Input() id = '';
   @Input() status: TicketStatus = TicketStatus.DONE;
-  @Input() tickets: Ticket[] = [];
+  @Input() tickets: FullTicket[] = [];
 
   constructor(public dialog: MatDialog, private store: Store<AppState>) {}
 
-  drop(event: CdkDragDrop<Ticket[]>) {
+  drop(event: CdkDragDrop<FullTicket[]>) {
     this.store.dispatch(
       moveItemAction({
         what: event.item.data,
@@ -39,7 +41,7 @@ export class SwimlaneComponent {
     );
   }
 
-  asTicket(ticket: Ticket): Ticket {
+  asTicket(ticket: FullTicket): FullTicket {
     return ticket;
   }
 
@@ -56,20 +58,28 @@ export class SwimlaneComponent {
     });
   }
 
-  editTicket(ticket: Ticket) {
+  edit(ticket: FullTicket) {
     const dialogRef = this.dialog.open(AddEditTicketDialogComponent, {
       width: '250px',
       data: { ticket: ticket },
     });
 
-    dialogRef.afterClosed().subscribe((ticket) => {
-      if (ticket) {
-        this.saveTicket(ticket);
+    dialogRef.afterClosed().subscribe((partialTicketFromDialog) => {
+      if (partialTicketFromDialog) {
+        this.updateTicket({ ...ticket, ...partialTicketFromDialog });
       }
     });
   }
 
+  delete(ticket: FullTicket) {
+    this.store.dispatch(deleteTicketAction({ ticket }));
+  }
+
   private saveTicket(ticket: Ticket) {
     this.store.dispatch(addTicketAction({ ticket }));
+  }
+
+  private updateTicket(ticket: FullTicket) {
+    this.store.dispatch(updateTicketAction({ ticket }));
   }
 }

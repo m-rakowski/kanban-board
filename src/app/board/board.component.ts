@@ -1,13 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-
-import { CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
-import { Ticket, TicketStatus } from '../models/ticket';
-import { AddEditTicketDialogComponent } from '../add-edit-ticket-dialog/add-edit-ticket-dialog.component';
-import {
-  addTicketAction,
-  moveItemAction,
-} from '../store/actions/ticket.actions';
-import { MatDialog } from '@angular/material/dialog';
+import { FullTicket, TicketStatus } from '../models/ticket';
 import { Store } from '@ngrx/store';
 import { TicketsState } from '../store/reducers/ticket.reducers';
 import {
@@ -28,9 +20,13 @@ export interface AppState {
   styleUrls: ['./board.component.scss'],
 })
 export class BoardComponent implements OnInit, OnDestroy {
+  TicketStatus = TicketStatus;
+  doneTickets: FullTicket[] = [];
+  ticketsToTest: FullTicket[] = [];
+  ticketsToDo: FullTicket[] = [];
   private onDestroySubject = new Subject();
 
-  TicketStatus = TicketStatus;
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit(): void {
     this.store
@@ -46,12 +42,6 @@ export class BoardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.onDestroySubject))
       .subscribe((tickets) => (this.ticketsToDo = tickets));
   }
-
-  doneTickets: Ticket[] = [];
-  ticketsToTest: Ticket[] = [];
-  ticketsToDo: Ticket[] = [];
-
-  constructor(private store: Store<AppState>) {}
 
   ngOnDestroy(): void {
     this.onDestroySubject.next();

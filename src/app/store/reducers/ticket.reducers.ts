@@ -1,11 +1,14 @@
 import { createReducer, on } from '@ngrx/store';
-import { Ticket, TicketStatus } from '../../models/ticket';
+import { FullTicket, TicketStatus } from '../../models/ticket';
 import {
   addTicketAction,
+  addTicketSuccessAction,
+  deleteTicketAction,
   loadAllTicketsSuccessAction,
   moveItemAction,
+  updateTicketAction,
+  updateTicketSuccessAction,
 } from '../actions/ticket.actions';
-import { v4 as uuidv4 } from 'uuid';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 export const initialState: TicketsState = {
@@ -15,26 +18,9 @@ export const initialState: TicketsState = {
 };
 
 export interface TicketsState {
-  toDo: Ticket[];
-  toTest: Ticket[];
-  done: Ticket[];
-}
-
-function addIdToTicket(ticket: Ticket) {
-  return { ...ticket, id: uuidv4() };
-}
-
-function getListFromId(listName: string, state: TicketsState): Ticket[] {
-  switch (listName) {
-    case 'toDo':
-      return state.toDo;
-    case 'toTest':
-      return state.toTest;
-    case 'done':
-      return state.done;
-    default:
-      return state.toDo;
-  }
+  toDo: FullTicket[];
+  toTest: FullTicket[];
+  done: FullTicket[];
 }
 
 export const ticketsReducers = createReducer<TicketsState>(
@@ -42,14 +28,55 @@ export const ticketsReducers = createReducer<TicketsState>(
   on(addTicketAction, (state, action) => {
     return {
       ...state,
-      [action.ticket.status]: [
-        ...state[action.ticket.status],
-        addIdToTicket(action.ticket),
-      ],
+      [action.ticket.status]: [...state[action.ticket.status], action.ticket],
+    };
+  }),
+  on(addTicketSuccessAction, (state, action) => {
+    const copy: FullTicket[] = JSON.parse(
+      JSON.stringify(state[action.ticket.status])
+    );
+    const foundIndex = copy.findIndex(
+      (ticket) => ticket.id === action.ticket.id
+    );
+
+    copy.splice(foundIndex, 1, action.ticket);
+
+    return {
+      ...state,
+      [action.ticket.status]: copy,
+    };
+  }),
+  on(updateTicketAction, (state, action) => {
+    const copy: FullTicket[] = JSON.parse(
+      JSON.stringify(state[action.ticket.status])
+    );
+    const foundIndex = copy.findIndex(
+      (ticket) => ticket.id === action.ticket.id
+    );
+
+    if (foundIndex > -1) {
+      copy[foundIndex] = action.ticket;
+      return { ...state, [action.ticket.status]: copy };
+    } else {
+      return { ...state };
+    }
+  }),
+  on(updateTicketSuccessAction, (state, action) => {
+    const copy: FullTicket[] = JSON.parse(
+      JSON.stringify(state[action.ticket.status])
+    );
+    const foundIndex = copy.findIndex(
+      (ticket) => ticket.id === action.ticket.id
+    );
+
+    copy.splice(foundIndex, 1, action.ticket);
+
+    return {
+      ...state,
+      [action.ticket.status]: copy,
     };
   }),
   on(loadAllTicketsSuccessAction, (state, action) => {
-    console.log(action);
     return {
       ...state,
       toDo: action.tickets.filter(
@@ -63,9 +90,16 @@ export const ticketsReducers = createReducer<TicketsState>(
       ),
     };
   }),
+  on(deleteTicketAction, (state, action) => {
+    const copy: FullTicket[] = JSON.parse(
+      JSON.stringify(state[action.ticket.status])
+    );
+    const foundIndex = copy.findIndex((el) => el.id === action.ticket.id);
+    copy.splice(foundIndex, 1);
+    return { ...state, [action.ticket.status]: copy };
+  }),
   on(moveItemAction, (state, action) => {
     const newState = JSON.parse(JSON.stringify(state));
-
     if (action.whereTo.listName === action.whereFrom.listName) {
       moveItemInArray(
         newState[action.whereTo.listName],

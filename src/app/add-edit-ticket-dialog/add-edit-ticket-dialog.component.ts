@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { Ticket } from '../models/ticket';
+import { FullTicket } from '../models/ticket';
 
 @Component({
   selector: 'app-add-edit-ticket-dialog',
@@ -10,12 +10,12 @@ import { Ticket } from '../models/ticket';
 })
 export class AddEditTicketDialogComponent implements OnInit {
   title = new FormControl(null, [Validators.required]);
-  content = new FormControl(null, [Validators.required]);
+  content = new FormControl('null', [Validators.required]);
   formGroup: FormGroup;
 
   constructor(
     private dialogRef: MatDialogRef<AddEditTicketDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { ticket: Ticket }
+    @Inject(MAT_DIALOG_DATA) public data: { ticket: FullTicket }
   ) {
     if (data?.ticket) {
       this.title.patchValue(data.ticket.title);

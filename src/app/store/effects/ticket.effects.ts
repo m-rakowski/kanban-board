@@ -7,16 +7,50 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class TicketEffects {
-  addTicket$ = createEffect(
-    () =>
-      this.actions$.pipe(
-        ofType('[Ticket] addTicketAction'),
-        mergeMap((action) => {
-          return this.ticketsService.addTicket(action.ticket);
-        })
-      ),
-    { dispatch: false }
+  addTicket$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType('[Ticket] addTicketAction'),
+      mergeMap((action) => {
+        return this.ticketsService.addTicket(action.ticket).pipe(
+          map((addedTicket) => ({
+            type: '[Ticket] addTicketSuccessAction',
+            ticket: addedTicket,
+          }))
+        );
+      })
+    )
   );
+
+  updateTicket$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType('[Ticket] updateTicketAction'),
+      mergeMap((action) => {
+        return this.ticketsService.updateTicket(action.ticket).pipe(
+          map((updatedTicket) => ({
+            type: '[Ticket] updateTicketSuccessAction',
+            ticket: updatedTicket,
+          }))
+        );
+      })
+    )
+  );
+
+  deleteTicket$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType('[Ticket] deleteTicketAction'),
+      mergeMap((action) => {
+        return this.ticketsService
+          .deleteTicket(action.ticket.status, action.ticket.id)
+          .pipe(
+            map(() => ({
+              type: '[Ticket] deleteTicketSuccessAction',
+              ticket: action.ticket,
+            }))
+          );
+      })
+    )
+  );
+
   loadAllTickets$ = createEffect(() =>
     this.actions$.pipe(
       ofType('[Ticket] loadAllTicketsAction'),
@@ -31,16 +65,6 @@ export class TicketEffects {
       })
     )
   );
-  // moveTicket$ = createEffect(
-  //   () =>
-  //     this.actions$.pipe(
-  //       ofType('[Ticket] moveItemAction'),
-  //       mergeMap((action) => {
-  //         return this.ticketsService.move(action.ticket);
-  //       })
-  //     ),
-  //   { dispatch: false }
-  // );
 
   constructor(
     private actions$: Actions<TicketActionsUnion>,

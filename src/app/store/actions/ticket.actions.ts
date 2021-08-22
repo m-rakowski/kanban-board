@@ -1,9 +1,25 @@
 import { createAction, props, union } from '@ngrx/store';
-import { Ticket } from '../../models/ticket';
+import { FullTicket, Ticket } from '../../models/ticket';
 
+export const updateTicketAction = createAction(
+  '[Ticket] updateTicketAction',
+  props<{ ticket: FullTicket }>()
+);
+export const updateTicketSuccessAction = createAction(
+  '[Ticket] updateTicketSuccessAction',
+  props<{ ticket: FullTicket }>()
+);
 export const addTicketAction = createAction(
   '[Ticket] addTicketAction',
   props<{ ticket: Ticket }>()
+);
+export const addTicketSuccessAction = createAction(
+  '[Ticket] addTicketSuccessAction',
+  props<{ ticket: FullTicket }>()
+);
+export const deleteTicketAction = createAction(
+  '[Ticket] deleteTicketAction',
+  props<{ ticket: FullTicket }>()
 );
 
 export const moveItemAction = createAction(
@@ -21,9 +37,25 @@ export const loadAllTicketsAction = createAction(
 export const loadAllTicketsSuccessAction = createAction(
   '[Ticket] loadAllTicketsSuccessAction',
   props<{
-    tickets: Ticket[];
+    tickets: FullTicket[];
   }>()
 );
 
-const all = union({ addTicketAction, moveItemAction, loadAllTicketsAction });
+export const deleteTicketSuccessAction = createAction(
+  '[Ticket] deleteTicketSuccessAction',
+  props<{
+    ticket: FullTicket;
+  }>()
+);
+
+const all = union({
+  addTicketAction,
+  addTicketSuccessAction,
+  moveItemAction,
+  loadAllTicketsAction,
+  deleteTicketAction,
+  deleteTicketSuccessAction,
+  updateTicketAction,
+  updateTicketSuccessAction,
+});
 export type TicketActionsUnion = typeof all;

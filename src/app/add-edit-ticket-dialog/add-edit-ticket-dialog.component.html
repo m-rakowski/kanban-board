@@ -1,12 +1,11 @@
 <div mat-dialog-content>
-  <form [formGroup]="formGroup" (ngSubmit)="saveAndClose()">
+  <form (ngSubmit)="saveAndClose()" [formGroup]="formGroup">
     <mat-form-field>
-      <input matInput placeholder="Title" [formControl]="title" />
+      <input [formControl]="title" matInput placeholder="Title" />
       <mat-error>{{ formGroup.get("title")?.errors | json }}</mat-error>
     </mat-form-field>
     <mat-form-field>
-      <textarea matInput placeholder="Content" [formControl]="content">
-      </textarea>
+      <input [formControl]="content" matInput placeholder="Content" />
       <mat-error>{{ formGroup.get("title")?.errors | json }}</mat-error>
     </mat-form-field>
     <button mat-stroked-button type="submit">Save</button>

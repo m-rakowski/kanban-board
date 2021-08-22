@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { forkJoin, Observable } from 'rxjs';
-import { Ticket, TicketDTO, TicketStatus } from './models/ticket';
-import { exhaustMap, map } from 'rxjs/operators';
+import { forkJoin, Observable, of } from 'rxjs';
+import { FullTicket, Ticket, TicketStatus } from './models/ticket';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
 
 //TODO rename to backend mock
@@ -10,29 +10,30 @@ import { v4 as uuidv4 } from 'uuid';
 export class TicketsService {
   constructor(private httpClient: HttpClient) {}
 
-  addTicket(ticket: Ticket): Observable<any> {
+  addTicket(ticket: Ticket): Observable<FullTicket> {
     return this.getLastTicket(ticket.status).pipe(
-      exhaustMap((lastTicket) => {
+      mergeMap((lastTicket) => {
         if (!lastTicket) {
           return this.apiCreateNewTicketWithLastAndFirst(ticket);
         } else {
           return this.apiCreateNewTicketWithLastAndPrevious(
             ticket,
             lastTicket.id
-          ).pipe(exhaustMap((y) => this.apiSetNextToY(lastTicket, y.id)));
+          ).pipe(mergeMap((y) => this.apiSetNextToY(lastTicket, y.id, y)));
         }
       })
     );
   }
 
   deleteTicket(ticketStatus: TicketStatus, ticketId: string): Observable<any> {
+    console.log(ticketStatus, ticketId);
     return this.httpClient
-      .get<TicketDTO>(`/api/${ticketStatus}/${ticketId}`)
+      .get<FullTicket>(`/api/${ticketStatus}/${ticketId}`)
       .pipe(
-        exhaustMap((found) => {
+        mergeMap((found) => {
           if (found) {
             return this.apiDeleteTicket(ticketStatus, ticketId).pipe(
-              exhaustMap(() =>
+              mergeMap(() =>
                 forkJoin([
                   this.apiUpdateTicket(ticketStatus, found.previousId, {
                     nextId: found.nextId,
@@ -50,17 +51,17 @@ export class TicketsService {
       );
   }
 
-  getLastTicket(ticketStatus: TicketStatus): Observable<TicketDTO | null> {
+  getLastTicket(ticketStatus: TicketStatus): Observable<FullTicket | null> {
     return this.httpClient
-      .get<TicketDTO[]>('/api/' + ticketStatus, {
+      .get<FullTicket[]>('/api/' + ticketStatus, {
         params: { nextId: 'LAST' },
       })
       .pipe(map((tickets) => (tickets.length == 1 ? tickets[0] : null)));
   }
 
-  getFirstTicket(ticketStatus: TicketStatus): Observable<TicketDTO | null> {
+  getFirstTicket(ticketStatus: TicketStatus): Observable<FullTicket | null> {
     return this.httpClient
-      .get<TicketDTO[]>('/api/' + ticketStatus, {
+      .get<FullTicket[]>('/api/' + ticketStatus, {
         params: { previousId: 'FIRST' },
       })
       .pipe(map((tickets) => (tickets.length == 1 ? tickets[0] : null)));
@@ -77,12 +78,20 @@ export class TicketsService {
       );
     } else {
       return this.httpClient
-        .get<TicketDTO[]>('/api/' + ticketStatus)
+        .get<FullTicket[]>('/api/' + ticketStatus)
         .pipe(map((tickets) => this.sorted(tickets)));
     }
   }
 
-  private sorted(tickets: TicketDTO[]) {
+  updateTicket(ticket: FullTicket): Observable<FullTicket> {
+    const params: any = ticket;
+    return this.httpClient.patch<FullTicket>(
+      `/api/${ticket.status}/${ticket.id}`,
+      params
+    );
+  }
+
+  private sorted(tickets: FullTicket[]) {
     tickets.forEach((ticket) => {
       const last = tickets.find((ticket) => ticket.id === 'LAST');
 
@@ -94,8 +103,8 @@ export class TicketsService {
 
   private apiCreateNewTicketWithLastAndFirst(
     ticket: Ticket
-  ): Observable<TicketDTO> {
-    return this.httpClient.post<TicketDTO>(`/api/${ticket.status}`, {
+  ): Observable<FullTicket> {
+    return this.httpClient.post<FullTicket>(`/api/${ticket.status}`, {
       ...ticket,
       id: uuidv4(),
       nextId: 'LAST',
@@ -106,8 +115,8 @@ export class TicketsService {
   private apiCreateNewTicketWithLastAndPrevious(
     ticket: Ticket,
     previousId: string
-  ): Observable<TicketDTO> {
-    return this.httpClient.post<TicketDTO>(`/api/${ticket.status}`, {
+  ): Observable<FullTicket> {
+    return this.httpClient.post<FullTicket>(`/api/${ticket.status}`, {
       ...ticket,
       id: uuidv4(),
       nextId: 'LAST',
@@ -115,20 +124,26 @@ export class TicketsService {
     });
   }
 
-  private apiSetNextToY(ticket: TicketDTO, nextId: string) {
-    return this.httpClient.patch<TicketDTO>(
-      `/api/${ticket.status}/${ticket.id}`,
-      {
+  private apiSetNextToY(
+    ticket: FullTicket,
+    nextId: string,
+    y: FullTicket
+  ): Observable<FullTicket> {
+    return this.httpClient
+      .patch<FullTicket>(`/api/${ticket.status}/${ticket.id}`, {
         nextId: nextId,
-      }
-    );
+      })
+      .pipe(
+        catchError(() => of()),
+        map(() => y)
+      );
   }
 
   private apiDeleteTicket(
     ticketStatus: TicketStatus,
     ticketId: string
   ): Observable<any> {
-    return this.httpClient.delete<TicketDTO>(
+    return this.httpClient.delete<FullTicket>(
       `/api/${ticketStatus}/${ticketId}`
     );
   }
@@ -138,6 +153,12 @@ export class TicketsService {
     ticketId: string,
     params: any
   ): Observable<any> {
-    return this.httpClient.patch(`/api/${ticketStatus}/${ticketId}`, params);
+    if (ticketId === 'LAST' || ticketId === 'FIRST') {
+      return of();
+    } else {
+      return this.httpClient
+        .patch(`/api/${ticketStatus}/${ticketId}`, params)
+        .pipe(catchError(() => of()));
+    }
   }
 }
