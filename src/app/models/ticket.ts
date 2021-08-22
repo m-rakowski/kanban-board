@@ -6,19 +6,22 @@ export enum TicketStatus {
   DONE = 'done',
 }
 
-export function randomTicket(): Ticket {
+export function randomTicket(ticketStatus: TicketStatus): Ticket {
   return {
-    id: uuidv4(),
     title: 'Title ' + Math.random(),
     content: 'Title ' + Math.random(),
-    status: TicketStatus.TO_DO,
+    status: ticketStatus,
   };
 }
 
 export interface Ticket {
-  id?: string;
   title: string;
   content: string;
   status: TicketStatus;
-  index?: number;
+}
+
+export interface TicketDTO extends Ticket {
+  id: string;
+  nextId: string;
+  previousId: string;
 }

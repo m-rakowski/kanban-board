@@ -1,46 +1,7 @@
 {
-  "tickets": [
-    {
-      "id": "59934e14-7695-4584-9951-9de4f58b375f",
-      "title": "[backend] implement a backend API for saving and deleting tickets",
-      "content": "",
-      "status": "toDo"
-    },
-    {
-      "id": "dd674d79-6f0e-45d5-89e6-7d38af617ea7",
-      "title": "[backend] install app on firebase",
-      "content": "",
-      "status": "toDo"
-    },
-    {
-      "id": "90343991-82d7-48ad-b2ca-5f838e5ecf03",
-      "title": "[frontend] connect the board to the API",
-      "content": "",
-      "status": "toDo"
-    },
-    {
-      "id": "26afe85c-6a03-40b4-9bb6-c3bf12908207",
-      "title": "[frontend] modal for adding tickets",
-      "content": "",
-      "status": "toDo"
-    },
-    {
-      "id": "ce3e091f-e2f6-44dd-a21c-c8887ee4fd7d",
-      "title": "[frontend] X for deleting tickets",
-      "content": "",
-      "status": "toDo"
-    },
-    {
-      "id": "5794de8f-760b-4232-a843-6ff38b984d0d",
-      "title": "[frontend] install redux",
-      "content": "",
-      "status": "done"
-    },
-    {
-      "id": "63165b84-6a42-4635-82b5-52eb4724cea2",
-      "title": "[frontend] create a drag-and-drop list",
-      "content": "",
-      "status": "done"
-    }
-  ]
+  "toDo": [
+
+  ],
+  "toTest": [],
+  "done": []
 }
