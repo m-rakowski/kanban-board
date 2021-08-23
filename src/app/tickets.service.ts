@@ -26,7 +26,6 @@ export class TicketsService {
   }
 
   deleteTicket(ticketStatus: TicketStatus, ticketId: string): Observable<any> {
-    console.log(ticketStatus, ticketId);
     return this.httpClient
       .get<FullTicket>(`/api/${ticketStatus}/${ticketId}`)
       .pipe(
@@ -45,7 +44,7 @@ export class TicketsService {
               )
             );
           } else {
-            throw new Error('ticket ' + ticketId + ' not found');
+            return of({});
           }
         })
       );
@@ -154,11 +153,11 @@ export class TicketsService {
     params: any
   ): Observable<any> {
     if (ticketId === 'LAST' || ticketId === 'FIRST') {
-      return of();
+      return of({});
     } else {
       return this.httpClient
         .patch(`/api/${ticketStatus}/${ticketId}`, params)
-        .pipe(catchError(() => of()));
+        .pipe(catchError(() => of({})));
     }
   }
 }

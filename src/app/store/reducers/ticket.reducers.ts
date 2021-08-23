@@ -4,6 +4,7 @@ import {
   addTicketAction,
   addTicketSuccessAction,
   deleteTicketAction,
+  deleteTicketSuccessAction,
   loadAllTicketsSuccessAction,
   moveItemAction,
   updateTicketAction,
@@ -15,12 +16,14 @@ export const initialState: TicketsState = {
   toDo: [],
   toTest: [],
   done: [],
+  updateInProgress: false,
 };
 
 export interface TicketsState {
   toDo: FullTicket[];
   toTest: FullTicket[];
   done: FullTicket[];
+  updateInProgress: boolean;
 }
 
 export const ticketsReducers = createReducer<TicketsState>(
@@ -29,6 +32,7 @@ export const ticketsReducers = createReducer<TicketsState>(
     return {
       ...state,
       [action.ticket.status]: [...state[action.ticket.status], action.ticket],
+      updateInProgress: true,
     };
   }),
   on(addTicketSuccessAction, (state, action) => {
@@ -44,6 +48,7 @@ export const ticketsReducers = createReducer<TicketsState>(
     return {
       ...state,
       [action.ticket.status]: copy,
+      updateInProgress: false,
     };
   }),
   on(updateTicketAction, (state, action) => {
@@ -56,9 +61,9 @@ export const ticketsReducers = createReducer<TicketsState>(
 
     if (foundIndex > -1) {
       copy[foundIndex] = action.ticket;
-      return { ...state, [action.ticket.status]: copy };
+      return { ...state, updateInProgress: true, [action.ticket.status]: copy };
     } else {
-      return { ...state };
+      return { ...state, updateInProgress: true };
     }
   }),
   on(updateTicketSuccessAction, (state, action) => {
@@ -74,6 +79,7 @@ export const ticketsReducers = createReducer<TicketsState>(
     return {
       ...state,
       [action.ticket.status]: copy,
+      updateInProgress: false,
     };
   }),
   on(loadAllTicketsSuccessAction, (state, action) => {
@@ -96,7 +102,10 @@ export const ticketsReducers = createReducer<TicketsState>(
     );
     const foundIndex = copy.findIndex((el) => el.id === action.ticket.id);
     copy.splice(foundIndex, 1);
-    return { ...state, [action.ticket.status]: copy };
+    return { ...state, updateInProgress: true, [action.ticket.status]: copy };
+  }),
+  on(deleteTicketSuccessAction, (state, action) => {
+    return { ...state, updateInProgress: false };
   }),
   on(moveItemAction, (state, action) => {
     const newState = JSON.parse(JSON.stringify(state));

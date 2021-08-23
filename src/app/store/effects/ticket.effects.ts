@@ -65,6 +65,22 @@ export class TicketEffects {
       })
     )
   );
+  //
+  // moveItem$ = createEffect(() =>
+  //   this.actions$.pipe(
+  //     ofType('[Ticket] moveItemAction'),
+  //     mergeMap((action) => {
+  //       return this.ticketsService
+  //         .moveTicket(action.what, action.whereFrom, action.whereTo)
+  //         .pipe(
+  //           map((updatedTicket) => ({
+  //             type: '[Ticket] updateTicketSuccessAction',
+  //             ticket: updatedTicket,
+  //           }))
+  //         );
+  //     })
+  //   )
+  // );
 
   constructor(
     private actions$: Actions<TicketActionsUnion>,

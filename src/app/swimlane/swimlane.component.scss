@@ -26,11 +26,13 @@
 
 .ticket-title {
   padding: 12px;
+  word-break: break-all;
 }
 
 .action-buttons {
   display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .spacer {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FullTicket, Ticket, TicketStatus } from '../models/ticket';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
@@ -11,19 +11,24 @@ import { MatDialog } from '@angular/material/dialog';
 import { Store } from '@ngrx/store';
 import { AppState } from '../board/board.component';
 import { AddEditTicketDialogComponent } from '../add-edit-ticket-dialog/add-edit-ticket-dialog.component';
+import { selectIsUpdateInProgress } from '../store/selectors/ticket.selectors';
 
 @Component({
   selector: 'app-swimlane',
   templateUrl: './swimlane.component.html',
   styleUrls: ['./swimlane.component.scss'],
 })
-export class SwimlaneComponent {
+export class SwimlaneComponent implements OnInit {
   @Input() title = '';
   @Input() id = '';
   @Input() status: TicketStatus = TicketStatus.DONE;
   @Input() tickets: FullTicket[] = [];
 
+  isUpdateInProgress$ = this.store.select(selectIsUpdateInProgress);
+
   constructor(public dialog: MatDialog, private store: Store<AppState>) {}
+
+  ngOnInit(): void {}
 
   drop(event: CdkDragDrop<FullTicket[]>) {
     this.store.dispatch(

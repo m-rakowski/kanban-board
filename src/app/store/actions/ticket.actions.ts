@@ -25,7 +25,7 @@ export const deleteTicketAction = createAction(
 export const moveItemAction = createAction(
   '[Ticket] moveItemAction',
   props<{
-    what: Ticket;
+    what: FullTicket;
     whereTo: { listName: string; elementIndex: number };
     whereFrom: { listName: string; elementIndex: number };
   }>()
