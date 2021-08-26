@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FullTicket, Ticket, TicketStatus } from './models/ticket';
-import { TicketsBackendMockService } from './tickets.backend-mock.service';
+import { TicketsDbService } from './tickets.db.service';
+import { FullTicket, Ticket, TicketStatus } from '../models/ticket';
 
 @Injectable({ providedIn: 'root' })
 export class TicketsService {
-  constructor(private ticketBackendMockService: TicketsBackendMockService) {}
+  constructor(private ticketsDbService: TicketsDbService) {}
 
   addTicket(ticket: Ticket): Observable<FullTicket> {
-    return this.ticketBackendMockService.addTicket(ticket);
+    return this.ticketsDbService.addTicket(ticket);
   }
 
   deleteTicket(ticketStatus: TicketStatus, ticketId: string): Observable<any> {
-    return this.ticketBackendMockService.deleteTicket(ticketStatus, ticketId);
+    return this.ticketsDbService.deleteTicket(ticketStatus, ticketId);
   }
 
   updateTicket(ticket: FullTicket): Observable<FullTicket> {
-    return this.ticketBackendMockService.updateTicket(ticket);
+    return this.ticketsDbService.updateTicket(ticket);
   }
 
   moveTicket(
@@ -24,10 +24,10 @@ export class TicketsService {
     whereFrom: { listName: string; elementIndex: number },
     whereTo: { listName: string; elementIndex: number }
   ): Observable<any> {
-    return this.ticketBackendMockService.moveTicket(ticket, whereFrom, whereTo);
+    return this.ticketsDbService.moveTicket(ticket, whereFrom, whereTo);
   }
 
   getAll(ticketStatus?: TicketStatus): Observable<FullTicket[]> {
-    return this.ticketBackendMockService.getAll(ticketStatus);
+    return this.ticketsDbService.getAll(ticketStatus);
   }
 }

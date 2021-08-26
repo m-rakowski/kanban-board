@@ -1,5 +1,6 @@
 import { createAction, props, union } from '@ngrx/store';
 import { FullTicket, Ticket } from '../../models/ticket';
+import { DbModel } from '../../models/db-model';
 
 export const updateTicketAction = createAction(
   '[Ticket] updateTicketAction',
@@ -33,6 +34,14 @@ export const moveItemAction = createAction(
 export const loadAllTicketsAction = createAction(
   '[Ticket] loadAllTicketsAction'
 );
+export const resetDbAction = createAction('[Ticket] resetDbAction');
+
+export const resetDbSuccessAction = createAction(
+  '[Ticket] resetDbSuccessAction',
+  props<{
+    db: DbModel;
+  }>()
+);
 
 export const loadAllTicketsSuccessAction = createAction(
   '[Ticket] loadAllTicketsSuccessAction',
@@ -57,5 +66,6 @@ const all = union({
   deleteTicketSuccessAction,
   updateTicketAction,
   updateTicketSuccessAction,
+  resetDbAction,
 });
 export type TicketActionsUnion = typeof all;

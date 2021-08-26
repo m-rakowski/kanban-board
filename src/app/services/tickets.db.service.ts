@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, Observable, of } from 'rxjs';
-import { FullTicket, Ticket, TicketStatus } from './models/ticket';
-import { catchError, map, mergeMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap } from 'rxjs/operators';
 import { v4 as uuidv4 } from 'uuid';
+import { FullTicket, Ticket, TicketStatus } from '../models/ticket';
+import { DbModel } from '../models/db-model';
 
 @Injectable({ providedIn: 'root' })
-export class TicketsBackendMockService {
+export class TicketsDbService {
   constructor(private httpClient: HttpClient) {}
 
   addTicket(ticket: Ticket): Observable<FullTicket> {
@@ -160,50 +161,74 @@ export class TicketsBackendMockService {
     }
   }
 
+  // TODO: findWhere
   private moveWithinTheSameList(
     X: FullTicket,
     whereFrom: { listName: string; elementIndex: number },
     whereTo: { listName: string; elementIndex: number }
   ): Observable<any> {
+    if (whereFrom.elementIndex === whereTo.elementIndex) {
+      return of({});
+    }
+
     // dislodge X from it's current position, meaning:
     // 1. set its left neighbor's nextId to X.id
     // 2. set its right neighbor's previousId to X.id
-    const dislodgeX: Observable<any> = this.apiUpdateTicket(
-      X.status,
-      X.nextId,
-      {
-        id: X.id,
-      }
-    ).pipe(
-      mergeMap(() => this.apiUpdateTicket(X.status, X.previousId, { id: X.id }))
-    );
+
+    const dislodgeX = () =>
+      this.apiUpdateTicket(X.status, X.nextId, {
+        previousId: X.previousId,
+      }).pipe(
+        mergeMap(() =>
+          this.apiUpdateTicket(X.status, X.previousId, { nextId: X.nextId })
+        )
+      );
 
     // put X in a new position, meaning
     // 1. find ticket Y such that it is whereTo.elementIndex'th when counting from ticket with previousId===FIRST
     // 2. Y's right neighbor previousId set to X.id
     // 3. Y nextId set to X.id
 
-    const findY: Observable<any> = this.getAll(X.status).pipe(
-      map((allTickets) => {
-        const first = allTickets.find((t) => t.previousId === 'FIRST');
-        let Y: FullTicket | undefined = first;
-        let i = 1;
-        while (Y?.nextId !== 'LAST') {
-          console.log('Y is', Y, 'i is', i);
-          if (whereTo.elementIndex === i) {
-            break;
+    const findY = () =>
+      this.getAll(X.status).pipe(
+        map((allTickets) => {
+          const first = allTickets.find((t) => t.previousId === 'FIRST');
+          let Y: FullTicket | undefined = first;
+          let i = 0;
+          while (Y?.nextId !== 'LAST') {
+            console.log('Y is', Y, 'i is', i);
+            if (whereTo.elementIndex === i) {
+              break;
+            }
+            i += 1;
+            Y = allTickets.find((t) => t.id === Y?.nextId);
           }
-          i += 1;
-          Y = allTickets.find((t) => t.id === Y?.nextId);
-        }
-        return Y;
-      })
-    );
+          console.log('FINALLY Y is', Y, 'i is', i);
 
-    const putXInNewPosition = findY.pipe(
-      mergeMap((y) => this.apiUpdateTicket(y.status, y.id, { nextId: X.id }))
-    );
-    return dislodgeX.pipe(mergeMap(() => putXInNewPosition));
+          return Y;
+        })
+      );
+
+    const updateY = (y: any) =>
+      this.apiUpdateTicket(y.status, y.id, { nextId: X.id });
+    const updateX = (y: any) =>
+      this.apiUpdateTicket(X.status, X.id, {
+        nextId: y.id,
+        previousId: y.previousId,
+      });
+    const updateZ = (y: any) =>
+      this.apiUpdateTicket(X.status, y.nextId, { previousId: X.id });
+
+    const putXInNewPosition = () =>
+      findY().pipe(
+        mergeMap((y) =>
+          updateY(y).pipe(
+            mergeMap(() => updateX(y)),
+            mergeMap(() => updateZ(y))
+          )
+        )
+      );
+    return dislodgeX().pipe(mergeMap(() => putXInNewPosition()));
   }
 
   private moveToADifferentList(
@@ -214,4 +239,68 @@ export class TicketsBackendMockService {
     const moveToList = of({}); //TODO
     return this.deleteTicket(X.status, X.id).pipe(mergeMap(() => moveToList));
   }
+
+  resetDb(): Observable<any> {
+    return this.getAll(TicketStatus.TO_DO).pipe(
+      mergeMap((tickets) => {
+        if (tickets.length > 0) {
+          return forkJoin(
+            tickets.map((ticket) =>
+              this.apiDeleteTicket(ticket.status, ticket.id)
+            )
+          );
+        } else {
+          return of({});
+        }
+      }),
+      mergeMap(() => {
+        return forkJoin(db.toDo.map((t) => this.apiAddTicket(t)));
+      })
+    );
+  }
+
+  private apiAddTicket(ticket: FullTicket) {
+    return this.httpClient.post<FullTicket>(`/api/${ticket.status}`, {
+      ...ticket,
+    });
+  }
 }
+
+export const db: DbModel = {
+  toDo: [
+    {
+      title: '0',
+      content: 'null',
+      status: TicketStatus.TO_DO,
+      id: '04f3bdaf-ca94-4be2-8f8f-7936d7b29774',
+      nextId: '419e6aa9-d750-4143-92e3-ba70a09bb0a0',
+      previousId: 'FIRST',
+    },
+    {
+      title: '1',
+      content: 'null',
+      status: TicketStatus.TO_DO,
+      id: '419e6aa9-d750-4143-92e3-ba70a09bb0a0',
+      nextId: '31da9a19-dc1b-4992-91b7-04e051a41148',
+      previousId: '04f3bdaf-ca94-4be2-8f8f-7936d7b29774',
+    },
+    {
+      title: '2',
+      content: 'null',
+      status: TicketStatus.TO_DO,
+      id: '31da9a19-dc1b-4992-91b7-04e051a41148',
+      nextId: '77b22676-7463-4135-ba63-f85251a4f42a',
+      previousId: '419e6aa9-d750-4143-92e3-ba70a09bb0a0',
+    },
+    {
+      title: '3',
+      content: 'null',
+      status: TicketStatus.TO_DO,
+      id: '77b22676-7463-4135-ba63-f85251a4f42a',
+      nextId: 'LAST',
+      previousId: '31da9a19-dc1b-4992-91b7-04e051a41148',
+    },
+  ],
+  toTest: [],
+  done: [],
+};

@@ -7,10 +7,12 @@ import {
   deleteTicketSuccessAction,
   loadAllTicketsSuccessAction,
   moveItemAction,
+  resetDbSuccessAction,
   updateTicketAction,
   updateTicketSuccessAction,
 } from '../actions/ticket.actions';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { db } from '../../services/tickets.db.service';
 
 export const initialState: TicketsState = {
   toDo: [],
@@ -106,6 +108,9 @@ export const ticketsReducers = createReducer<TicketsState>(
   }),
   on(deleteTicketSuccessAction, (state, action) => {
     return { ...state, updateInProgress: false };
+  }),
+  on(resetDbSuccessAction, (state, action) => {
+    return { ...state, toDo: db.toDo, toTest: db.toTest, done: db.done };
   }),
   on(moveItemAction, (state, action) => {
     const newState = JSON.parse(JSON.stringify(state));

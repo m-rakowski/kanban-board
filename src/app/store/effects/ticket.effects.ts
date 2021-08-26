@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { TicketsService } from '../../tickets.service';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { TicketActionsUnion } from '../actions/ticket.actions';
 import { of } from 'rxjs';
+import { TicketsService } from '../../services/tickets.service';
+import { TicketsDbService } from '../../services/tickets.db.service';
 
 @Injectable()
 export class TicketEffects {
@@ -18,6 +19,19 @@ export class TicketEffects {
           }))
         );
       })
+    )
+  );
+
+  resetDb$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType('[Ticket] resetDbAction'),
+      mergeMap(() =>
+        this.ticketsDbService.resetDb().pipe(
+          map(() => ({
+            type: '[Ticket] resetDbSuccessAction',
+          }))
+        )
+      )
     )
   );
 
@@ -84,6 +98,7 @@ export class TicketEffects {
 
   constructor(
     private actions$: Actions<TicketActionsUnion>,
-    private ticketsService: TicketsService
+    private ticketsService: TicketsService,
+    private ticketsDbService: TicketsDbService
   ) {}
 }
