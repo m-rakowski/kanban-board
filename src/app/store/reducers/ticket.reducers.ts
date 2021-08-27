@@ -28,6 +28,25 @@ export interface TicketsState {
   updateInProgress: boolean;
 }
 
+function sorted(tickets: FullTicket[]) {
+  const result: FullTicket[] = [];
+
+  const copy: FullTicket[] = JSON.parse(JSON.stringify(tickets));
+
+  const firstIndex = copy.findIndex((ticket) => ticket.previousId === 'FIRST');
+
+  if (firstIndex > -1) {
+    let curr: any = copy[firstIndex];
+
+    while (curr && curr.nextId !== 'LAST') {
+      result.push(curr);
+      curr = copy.find((ticket) => ticket.id === curr.nextId);
+    }
+    result.push(curr);
+  }
+  return result;
+}
+
 export const ticketsReducers = createReducer<TicketsState>(
   initialState,
   on(addTicketAction, (state, action) => {
@@ -87,14 +106,16 @@ export const ticketsReducers = createReducer<TicketsState>(
   on(loadAllTicketsSuccessAction, (state, action) => {
     return {
       ...state,
-      toDo: action.tickets.filter(
-        (ticket) => ticket.status === TicketStatus.TO_DO
+      toDo: sorted(
+        action.tickets.filter((ticket) => ticket.status === TicketStatus.TO_DO)
       ),
-      toTest: action.tickets.filter(
-        (ticket) => ticket.status === TicketStatus.TO_TEST
+      toTest: sorted(
+        action.tickets.filter(
+          (ticket) => ticket.status === TicketStatus.TO_TEST
+        )
       ),
-      done: action.tickets.filter(
-        (ticket) => ticket.status === TicketStatus.DONE
+      done: sorted(
+        action.tickets.filter((ticket) => ticket.status === TicketStatus.DONE)
       ),
     };
   }),
