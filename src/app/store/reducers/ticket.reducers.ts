@@ -28,7 +28,7 @@ export interface TicketsState {
   updateInProgress: boolean;
 }
 
-function sorted(tickets: FullTicket[]) {
+export function sorted(tickets: FullTicket[]) {
   const result: FullTicket[] = [];
 
   const copy: FullTicket[] = JSON.parse(JSON.stringify(tickets));
