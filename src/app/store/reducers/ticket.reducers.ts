@@ -12,7 +12,8 @@ import {
   updateTicketSuccessAction,
 } from '../actions/ticket.actions';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { db } from '../../services/tickets.db.service';
+import { db } from '../../sample.db';
+import { sorted } from './reducer-utils';
 
 export const initialState: TicketsState = {
   toDo: [],
@@ -26,25 +27,6 @@ export interface TicketsState {
   toTest: FullTicket[];
   done: FullTicket[];
   updateInProgress: boolean;
-}
-
-export function sorted(tickets: FullTicket[]) {
-  const result: FullTicket[] = [];
-
-  const copy: FullTicket[] = JSON.parse(JSON.stringify(tickets));
-
-  const firstIndex = copy.findIndex((ticket) => ticket.previousId === 'FIRST');
-
-  if (firstIndex > -1) {
-    let curr: any = copy[firstIndex];
-
-    while (curr && curr.nextId !== 'LAST') {
-      result.push(curr);
-      curr = copy.find((ticket) => ticket.id === curr.nextId);
-    }
-    result.push(curr);
-  }
-  return result;
 }
 
 export const ticketsReducers = createReducer<TicketsState>(
@@ -141,6 +123,9 @@ export const ticketsReducers = createReducer<TicketsState>(
         action.whereFrom.elementIndex,
         action.whereTo.elementIndex
       );
+      newState[action.whereTo.listName] = updatePreviousAndNext(
+        newState[action.whereTo.listName]
+      );
     } else {
       transferArrayItem(
         newState[action.whereFrom.listName],
@@ -152,3 +137,11 @@ export const ticketsReducers = createReducer<TicketsState>(
     return newState;
   })
 );
+
+function updatePreviousAndNext(arr: FullTicket[]): FullTicket[] {
+  for (let i = 0; i < arr.length; i += 1) {
+    arr[i].previousId = arr[i - 1] ? arr[i - 1].id : 'FIRST';
+    arr[i].nextId = arr[i + 1] ? arr[i + 1].id : 'LAST';
+  }
+  return arr;
+}
