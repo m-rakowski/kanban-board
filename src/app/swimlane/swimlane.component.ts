@@ -5,6 +5,7 @@ import {
   addTicketAction,
   deleteTicketAction,
   moveItemAction,
+  resetDbAction,
   updateTicketAction,
 } from '../store/actions/ticket.actions';
 import { MatDialog } from '@angular/material/dialog';
