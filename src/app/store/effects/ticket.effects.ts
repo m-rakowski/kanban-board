@@ -89,7 +89,6 @@ export class TicketEffects {
           .pipe(
             map((updatedTicket) => ({
               type: '[Ticket] moveItemSuccessAction',
-              ticket: updatedTicket,
             }))
           );
       })

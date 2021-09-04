@@ -31,6 +31,10 @@ export const moveItemAction = createAction(
     whereFrom: { listName: string; elementIndex: number };
   }>()
 );
+export const moveItemSuccessAction = createAction(
+  '[Ticket] moveItemSuccessAction'
+);
+
 export const loadAllTicketsAction = createAction(
   '[Ticket] loadAllTicketsAction'
 );
@@ -61,6 +65,7 @@ const all = union({
   addTicketAction,
   addTicketSuccessAction,
   moveItemAction,
+  moveItemSuccessAction,
   loadAllTicketsAction,
   deleteTicketAction,
   deleteTicketSuccessAction,
