@@ -2,13 +2,19 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TicketsDbService } from './tickets.db.service';
 import { FullTicket, Ticket, TicketStatus } from '../models/ticket';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class TicketsService {
-  constructor(private ticketsDbService: TicketsDbService) {}
+  constructor(
+    private ticketsDbService: TicketsDbService,
+    private httpClient: HttpClient
+  ) {}
 
   addTicket(ticket: Ticket): Observable<FullTicket> {
-    return this.ticketsDbService.addTicket(ticket);
+    return this.httpClient.post<FullTicket>(`/api/tickets`, ticket, {
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   deleteTicket(ticketStatus: TicketStatus, ticketId: string): Observable<any> {
