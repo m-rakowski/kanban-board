@@ -9,7 +9,11 @@ import { FullTicket } from '../models/ticket';
   styleUrls: ['./add-edit-ticket-dialog.component.scss'],
 })
 export class AddEditTicketDialogComponent implements OnInit {
-  title = new FormControl(null, [Validators.required]);
+  title = new FormControl(null, [
+    Validators.required,
+    Validators.minLength(3),
+    Validators.maxLength(15),
+  ]);
   content = new FormControl('null', [Validators.required]);
   formGroup: FormGroup;
 

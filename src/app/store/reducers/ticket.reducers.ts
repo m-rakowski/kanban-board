@@ -5,13 +5,13 @@ import {
   addTicketSuccessAction,
   deleteTicketAction,
   deleteTicketSuccessAction,
+  genericErrorAction,
   loadAllTicketsSuccessAction,
   moveItemAction,
   resetDbSuccessAction,
   updateTicketAction,
-  updateTicketSuccessAction,
   updateTicketErrorAction,
-  genericErrorAction,
+  updateTicketSuccessAction,
 } from '../actions/ticket.actions';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { db } from '../../sample.db';
@@ -33,44 +33,26 @@ export interface TicketsState {
 
 export const ticketsReducers = createReducer<TicketsState>(
   initialState,
-  // on(addTicketAction, (state, action) => {
-  //   return {
-  //     ...state,
-  //     [action.ticket.status]: [...state[action.ticket.status], action.ticket],
-  //     updateInProgress: true,
-  //   };
-  // }),
-  on(addTicketSuccessAction, (state, action) => {
-    const copy: FullTicket[] = JSON.parse(
-      JSON.stringify(state[action.ticket.status])
-    );
-    const foundIndex = copy.findIndex(
-      (ticket) => ticket.id === action.ticket.id
-    );
-
-    copy.splice(foundIndex, 1, action.ticket);
-
+  on(addTicketAction, (state, action) => {
     return {
       ...state,
-      [action.ticket.status]: copy,
+      updateInProgress: true,
+    };
+  }),
+  on(updateTicketAction, (state, action) => {
+    return {
+      ...state,
+      updateInProgress: true,
+    };
+  }),
+  on(addTicketSuccessAction, (state, action) => {
+    console.log('addTicketSuccessAction', action);
+    return {
+      ...state,
+      [action.ticket.status]: [...state[action.ticket.status], action.ticket],
       updateInProgress: false,
     };
   }),
-  // on(updateTicketAction, (state, action) => {
-  //   const copy: FullTicket[] = JSON.parse(
-  //     JSON.stringify(state[action.ticket.status])
-  //   );
-  //   const foundIndex = copy.findIndex(
-  //     (ticket) => ticket.id === action.ticket.id
-  //   );
-  //
-  //   if (foundIndex > -1) {
-  //     copy[foundIndex] = action.ticket;
-  //     return { ...state, updateInProgress: true, [action.ticket.status]: copy };
-  //   } else {
-  //     return { ...state, updateInProgress: true };
-  //   }
-  // }),
   on(updateTicketSuccessAction, (state, action) => {
     const copy: FullTicket[] = JSON.parse(
       JSON.stringify(state[action.ticket.status])
@@ -79,13 +61,16 @@ export const ticketsReducers = createReducer<TicketsState>(
       (ticket) => ticket.id === action.ticket.id
     );
 
-    copy.splice(foundIndex, 1, action.ticket);
-
-    return {
-      ...state,
-      [action.ticket.status]: copy,
-      updateInProgress: false,
-    };
+    if (foundIndex > -1) {
+      copy[foundIndex] = action.ticket;
+      return {
+        ...state,
+        updateInProgress: false,
+        [action.ticket.status]: copy,
+      };
+    } else {
+      return { ...state, updateInProgress: false };
+    }
   }),
   on(loadAllTicketsSuccessAction, (state, action) => {
     console.log(action);
