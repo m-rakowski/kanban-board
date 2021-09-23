@@ -1,15 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { TicketsDbService } from './tickets.db.service';
+import { Observable, of } from 'rxjs';
 import { FullTicket, Ticket, TicketStatus } from '../models/ticket';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({ providedIn: 'root' })
 export class TicketsService {
-  constructor(
-    private ticketsDbService: TicketsDbService,
-    private httpClient: HttpClient
-  ) {}
+  constructor(private httpClient: HttpClient) {}
 
   addTicket(ticket: Ticket): Observable<FullTicket> {
     return this.httpClient.post<FullTicket>(`/api/tickets`, ticket, {
@@ -18,11 +14,11 @@ export class TicketsService {
   }
 
   deleteTicket(ticketStatus: TicketStatus, ticketId: string): Observable<any> {
-    return this.ticketsDbService.deleteTicket(ticketStatus, ticketId);
+    return this.httpClient.delete(`/api/tickets/${ticketId}`);
   }
 
   updateTicket(ticket: FullTicket): Observable<FullTicket> {
-    return this.ticketsDbService.updateTicket(ticket);
+    return this.httpClient.put<FullTicket>(`/api/tickets/${ticket.id}`, ticket);
   }
 
   moveTicket(
@@ -30,10 +26,10 @@ export class TicketsService {
     whereFrom: { listName: string; elementIndex: number },
     whereTo: { listName: string; elementIndex: number }
   ): Observable<any> {
-    return this.ticketsDbService.moveTicket(ticket, whereFrom, whereTo);
+    return of();
   }
 
   getAll(ticketStatus?: TicketStatus): Observable<FullTicket[]> {
-    return this.ticketsDbService.getAll(ticketStatus);
+    return this.httpClient.get<FullTicket[]>(`/api/tickets`);
   }
 }

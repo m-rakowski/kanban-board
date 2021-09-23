@@ -20,6 +20,6 @@ export interface Ticket {
 
 export interface FullTicket extends Ticket {
   id: string;
-  nextId: string;
-  previousId: string;
+  nextId: string | null;
+  previousId: string | null;
 }

@@ -4,7 +4,6 @@ import { catchError, map, mergeMap } from 'rxjs/operators';
 import { TicketActionsUnion } from '../actions/ticket.actions';
 import { of } from 'rxjs';
 import { TicketsService } from '../../services/tickets.service';
-import { TicketsDbService } from '../../services/tickets.db.service';
 
 @Injectable()
 export class TicketEffects {
@@ -22,19 +21,6 @@ export class TicketEffects {
     )
   );
 
-  resetDb$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType('[Ticket] resetDbAction'),
-      mergeMap(() =>
-        this.ticketsDbService.resetDb().pipe(
-          map(() => ({
-            type: '[Ticket] resetDbSuccessAction',
-          }))
-        )
-      )
-    )
-  );
-
   updateTicket$ = createEffect(() =>
     this.actions$.pipe(
       ofType('[Ticket] updateTicketAction'),
@@ -43,7 +29,8 @@ export class TicketEffects {
           map((updatedTicket) => ({
             type: '[Ticket] updateTicketSuccessAction',
             ticket: updatedTicket,
-          }))
+          })),
+          catchError(() => of({ type: '[Ticket] updateTicketErrorAction' }))
         );
       })
     )
@@ -97,7 +84,6 @@ export class TicketEffects {
 
   constructor(
     private actions$: Actions<TicketActionsUnion>,
-    private ticketsService: TicketsService,
-    private ticketsDbService: TicketsDbService
+    private ticketsService: TicketsService
   ) {}
 }

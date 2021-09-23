@@ -18,6 +18,14 @@ export const addTicketSuccessAction = createAction(
   '[Ticket] addTicketSuccessAction',
   props<{ ticket: FullTicket }>()
 );
+export const genericErrorAction = createAction(
+  '[Ticket] genericErrorAction',
+  props<any>()
+);
+export const updateTicketErrorAction = createAction(
+  '[Ticket] updateTicketErrorAction',
+  props<{ ticket: FullTicket }>()
+);
 export const deleteTicketAction = createAction(
   '[Ticket] deleteTicketAction',
   props<{ ticket: FullTicket }>()
@@ -38,7 +46,6 @@ export const moveItemSuccessAction = createAction(
 export const loadAllTicketsAction = createAction(
   '[Ticket] loadAllTicketsAction'
 );
-export const resetDbAction = createAction('[Ticket] resetDbAction');
 
 export const resetDbSuccessAction = createAction(
   '[Ticket] resetDbSuccessAction',
@@ -71,6 +78,7 @@ const all = union({
   deleteTicketSuccessAction,
   updateTicketAction,
   updateTicketSuccessAction,
-  resetDbAction,
+  updateTicketErrorAction,
+  genericErrorAction,
 });
 export type TicketActionsUnion = typeof all;

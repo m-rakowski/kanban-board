@@ -16,14 +16,14 @@ describe('sorted', () => {
         status: TicketStatus.TO_DO,
         id: '04f3bdaf-ca94-4be2-8f8f-7936d7b29774',
         nextId: '419e6aa9-d750-4143-92e3-ba70a09bb0a0',
-        previousId: 'FIRST',
+        previousId: null,
       },
       {
         title: '3',
         content: 'null',
         status: TicketStatus.TO_DO,
         id: '77b22676-7463-4135-ba63-f85251a4f42a',
-        nextId: 'LAST',
+        nextId: null,
         previousId: '31da9a19-dc1b-4992-91b7-04e051a41148',
       },
       {
@@ -50,7 +50,7 @@ describe('sorted', () => {
         status: TicketStatus.TO_DO,
         id: '04f3bdaf-ca94-4be2-8f8f-7936d7b29774',
         nextId: '419e6aa9-d750-4143-92e3-ba70a09bb0a0',
-        previousId: 'FIRST',
+        previousId: null,
       },
       {
         title: '1',
@@ -73,7 +73,7 @@ describe('sorted', () => {
         content: 'null',
         status: TicketStatus.TO_DO,
         id: '77b22676-7463-4135-ba63-f85251a4f42a',
-        nextId: 'LAST',
+        nextId: null,
         previousId: '31da9a19-dc1b-4992-91b7-04e051a41148',
       },
     ];

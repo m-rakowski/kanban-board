@@ -5,7 +5,6 @@ import { MatButtonHarness } from '@angular/material/button/testing';
 import { HarnessLoader } from '@angular/cdk/testing';
 import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { Store } from '@ngrx/store';
-import { resetDbAction } from '../store/actions/ticket.actions';
 
 describe('SwimlaneComponent', () => {
   let component: SwimlaneComponent;
@@ -35,10 +34,5 @@ describe('SwimlaneComponent', () => {
 
     loader = TestbedHarnessEnvironment.loader(fixture);
     theButton = await loader.getHarness(MatButtonHarness.with({ text: '+' }));
-  });
-
-  xit('should make sure that after dropping an item a resetDbAction is dispatched', async () => {
-    await theButton.click();
-    expect(storeMock.dispatch).toHaveBeenCalledWith(resetDbAction());
   });
 });

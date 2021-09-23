@@ -56,9 +56,10 @@ import { AddEditTicketDialogComponent } from './add-edit-ticket-dialog/add-edit-
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { SwimlaneComponent } from './swimlane/swimlane.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { TicketEffects } from './store/effects/ticket.effects';
+import { HttpConfigInterceptor } from './services/http-config-interceptor';
 
 export const materialModules = [
   ClipboardModule,
@@ -126,7 +127,13 @@ export const materialModules = [
     materialModules,
     HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpConfigInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

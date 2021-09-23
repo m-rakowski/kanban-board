@@ -10,6 +10,8 @@ import {
   resetDbSuccessAction,
   updateTicketAction,
   updateTicketSuccessAction,
+  updateTicketErrorAction,
+  genericErrorAction,
 } from '../actions/ticket.actions';
 import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { db } from '../../sample.db';
@@ -31,13 +33,13 @@ export interface TicketsState {
 
 export const ticketsReducers = createReducer<TicketsState>(
   initialState,
-  on(addTicketAction, (state, action) => {
-    return {
-      ...state,
-      [action.ticket.status]: [...state[action.ticket.status], action.ticket],
-      updateInProgress: true,
-    };
-  }),
+  // on(addTicketAction, (state, action) => {
+  //   return {
+  //     ...state,
+  //     [action.ticket.status]: [...state[action.ticket.status], action.ticket],
+  //     updateInProgress: true,
+  //   };
+  // }),
   on(addTicketSuccessAction, (state, action) => {
     const copy: FullTicket[] = JSON.parse(
       JSON.stringify(state[action.ticket.status])
@@ -54,21 +56,21 @@ export const ticketsReducers = createReducer<TicketsState>(
       updateInProgress: false,
     };
   }),
-  on(updateTicketAction, (state, action) => {
-    const copy: FullTicket[] = JSON.parse(
-      JSON.stringify(state[action.ticket.status])
-    );
-    const foundIndex = copy.findIndex(
-      (ticket) => ticket.id === action.ticket.id
-    );
-
-    if (foundIndex > -1) {
-      copy[foundIndex] = action.ticket;
-      return { ...state, updateInProgress: true, [action.ticket.status]: copy };
-    } else {
-      return { ...state, updateInProgress: true };
-    }
-  }),
+  // on(updateTicketAction, (state, action) => {
+  //   const copy: FullTicket[] = JSON.parse(
+  //     JSON.stringify(state[action.ticket.status])
+  //   );
+  //   const foundIndex = copy.findIndex(
+  //     (ticket) => ticket.id === action.ticket.id
+  //   );
+  //
+  //   if (foundIndex > -1) {
+  //     copy[foundIndex] = action.ticket;
+  //     return { ...state, updateInProgress: true, [action.ticket.status]: copy };
+  //   } else {
+  //     return { ...state, updateInProgress: true };
+  //   }
+  // }),
   on(updateTicketSuccessAction, (state, action) => {
     const copy: FullTicket[] = JSON.parse(
       JSON.stringify(state[action.ticket.status])
@@ -86,7 +88,16 @@ export const ticketsReducers = createReducer<TicketsState>(
     };
   }),
   on(loadAllTicketsSuccessAction, (state, action) => {
-    return {
+    console.log(action);
+    console.log(
+      action.tickets.filter((ticket) => ticket.status === TicketStatus.TO_DO)
+    );
+    console.log(
+      sorted(
+        action.tickets.filter((ticket) => ticket.status === TicketStatus.TO_DO)
+      )
+    );
+    const newState = {
       ...state,
       toDo: sorted(
         action.tickets.filter((ticket) => ticket.status === TicketStatus.TO_DO)
@@ -100,6 +111,8 @@ export const ticketsReducers = createReducer<TicketsState>(
         action.tickets.filter((ticket) => ticket.status === TicketStatus.DONE)
       ),
     };
+    console.log(newState);
+    return newState;
   }),
   on(deleteTicketAction, (state, action) => {
     const copy: FullTicket[] = JSON.parse(
@@ -135,13 +148,19 @@ export const ticketsReducers = createReducer<TicketsState>(
       );
     }
     return newState;
+  }),
+  on(genericErrorAction, (state, action) => {
+    return { ...state, updateInProgress: false };
+  }),
+  on(updateTicketErrorAction, (state, action) => {
+    return { ...state, updateInProgress: false };
   })
 );
 
 function updatePreviousAndNext(arr: FullTicket[]): FullTicket[] {
   for (let i = 0; i < arr.length; i += 1) {
-    arr[i].previousId = arr[i - 1] ? arr[i - 1].id : 'FIRST';
-    arr[i].nextId = arr[i + 1] ? arr[i + 1].id : 'LAST';
+    arr[i].previousId = arr[i - 1] ? arr[i - 1].id : null;
+    arr[i].nextId = arr[i + 1] ? arr[i + 1].id : null;
   }
   return arr;
 }
