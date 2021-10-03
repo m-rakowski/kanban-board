@@ -1,7 +1,7 @@
 export enum TicketStatus {
-  TO_DO = 'toDo',
-  TO_TEST = 'toTest',
-  DONE = 'done',
+  toDo = 'toDo',
+  toTest = 'toTest',
+  done = 'done',
 }
 
 export function randomTicket(ticketStatus: TicketStatus): Ticket {
@@ -21,5 +21,4 @@ export interface Ticket {
 export interface FullTicket extends Ticket {
   id: string;
   nextId: string | null;
-  previousId: string | null;
 }

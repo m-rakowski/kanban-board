@@ -1,7 +1,16 @@
 import { createAction, props, union } from '@ngrx/store';
 import { FullTicket, Ticket } from '../../models/ticket';
 import { DbModel } from '../../models/db-model';
+import { MoveRequest } from '../../models/move-request';
 
+export const moveAction = createAction(
+  '[Ticket] moveAction',
+  props<{ moveRequest: MoveRequest }>()
+);
+export const moveSuccessAction = createAction(
+  '[Ticket] moveSuccessAction',
+  props<any>()
+);
 export const updateTicketAction = createAction(
   '[Ticket] updateTicketAction',
   props<{ ticket: FullTicket }>()
@@ -29,18 +38,6 @@ export const updateTicketErrorAction = createAction(
 export const deleteTicketAction = createAction(
   '[Ticket] deleteTicketAction',
   props<{ ticket: FullTicket }>()
-);
-
-export const moveItemAction = createAction(
-  '[Ticket] moveItemAction',
-  props<{
-    what: FullTicket;
-    whereTo: { listName: string; elementIndex: number };
-    whereFrom: { listName: string; elementIndex: number };
-  }>()
-);
-export const moveItemSuccessAction = createAction(
-  '[Ticket] moveItemSuccessAction'
 );
 
 export const loadAllTicketsAction = createAction(
@@ -71,8 +68,6 @@ export const deleteTicketSuccessAction = createAction(
 const all = union({
   addTicketAction,
   addTicketSuccessAction,
-  moveItemAction,
-  moveItemSuccessAction,
   loadAllTicketsAction,
   deleteTicketAction,
   deleteTicketSuccessAction,
@@ -80,5 +75,7 @@ const all = union({
   updateTicketSuccessAction,
   updateTicketErrorAction,
   genericErrorAction,
+  moveAction,
+  moveSuccessAction,
 });
 export type TicketActionsUnion = typeof all;

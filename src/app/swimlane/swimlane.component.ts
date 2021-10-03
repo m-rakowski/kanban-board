@@ -1,10 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FullTicket, Ticket, TicketStatus } from '../models/ticket';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import {
   addTicketAction,
   deleteTicketAction,
-  moveItemAction,
   updateTicketAction,
 } from '../store/actions/ticket.actions';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,30 +20,15 @@ import { selectIsUpdateInProgress } from '../store/selectors/ticket.selectors';
 export class SwimlaneComponent implements OnInit {
   @Input() title = '';
   @Input() id = '';
-  @Input() status: TicketStatus = TicketStatus.DONE;
+  @Input() status: TicketStatus = TicketStatus.done;
   @Input() tickets: FullTicket[] = [];
 
   isUpdateInProgress$ = this.store.select(selectIsUpdateInProgress);
+  @Output() dropEventEmitter = new EventEmitter<CdkDragDrop<FullTicket[]>>();
 
   constructor(public dialog: MatDialog, private store: Store<AppState>) {}
 
   ngOnInit(): void {}
-
-  drop(event: CdkDragDrop<FullTicket[]>) {
-    this.store.dispatch(
-      moveItemAction({
-        what: event.item.data,
-        whereTo: {
-          listName: event.container.id,
-          elementIndex: event.currentIndex,
-        },
-        whereFrom: {
-          listName: event.previousContainer.id,
-          elementIndex: event.previousIndex,
-        },
-      })
-    );
-  }
 
   asTicket(ticket: FullTicket): FullTicket {
     return ticket;
@@ -86,5 +70,9 @@ export class SwimlaneComponent implements OnInit {
 
   private updateTicket(ticket: FullTicket) {
     this.store.dispatch(updateTicketAction({ ticket }));
+  }
+
+  drop(event: CdkDragDrop<FullTicket[]>) {
+    this.dropEventEmitter.next(event);
   }
 }

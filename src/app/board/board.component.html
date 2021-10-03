@@ -3,25 +3,28 @@
     <div class="col-sm-4">
       <app-swimlane
         [id]="'toDo'"
-        [status]="TicketStatus.TO_DO"
+        [status]="TicketStatus.toDo"
         [title]="'To Do'"
-        [tickets]="ticketsToDo"
+        [tickets]="allTickets.toDo"
+        (dropEventEmitter)="drop($event)"
       ></app-swimlane>
     </div>
     <div class="col-sm-4">
       <app-swimlane
         [id]="'toTest'"
-        [status]="TicketStatus.TO_TEST"
+        [status]="TicketStatus.toTest"
         [title]="'To Test'"
-        [tickets]="ticketsToTest"
+        [tickets]="allTickets.toTest"
+        (dropEventEmitter)="drop($event)"
       ></app-swimlane>
     </div>
     <div class="col-sm-4">
       <app-swimlane
         [id]="'done'"
-        [status]="TicketStatus.DONE"
+        [status]="TicketStatus.done"
         [title]="'Done'"
-        [tickets]="doneTickets"
+        [tickets]="allTickets.done"
+        (dropEventEmitter)="drop($event)"
       ></app-swimlane>
     </div>
   </div>

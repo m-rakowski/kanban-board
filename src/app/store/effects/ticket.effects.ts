@@ -69,15 +69,13 @@ export class TicketEffects {
 
   moveItem$ = createEffect(() =>
     this.actions$.pipe(
-      ofType('[Ticket] moveItemAction'),
+      ofType('[Ticket] moveAction'),
       mergeMap((action) => {
-        return this.ticketsService
-          .moveTicket(action.what, action.whereFrom, action.whereTo)
-          .pipe(
-            map((updatedTicket) => ({
-              type: '[Ticket] moveItemSuccessAction',
-            }))
-          );
+        return this.ticketsService.moveTicket(action.moveRequest).pipe(
+          map(() => ({
+            type: '[Ticket] loadAllTicketsAction',
+          }))
+        );
       })
     )
   );

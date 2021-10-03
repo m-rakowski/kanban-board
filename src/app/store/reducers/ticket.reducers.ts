@@ -7,13 +7,12 @@ import {
   deleteTicketSuccessAction,
   genericErrorAction,
   loadAllTicketsSuccessAction,
-  moveItemAction,
+  moveSuccessAction,
   resetDbSuccessAction,
   updateTicketAction,
   updateTicketErrorAction,
   updateTicketSuccessAction,
 } from '../actions/ticket.actions';
-import { moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { db } from '../../sample.db';
 import { sorted } from './reducer-utils';
 
@@ -46,7 +45,6 @@ export const ticketsReducers = createReducer<TicketsState>(
     };
   }),
   on(addTicketSuccessAction, (state, action) => {
-    console.log('addTicketSuccessAction', action);
     return {
       ...state,
       [action.ticket.status]: [...state[action.ticket.status], action.ticket],
@@ -73,30 +71,18 @@ export const ticketsReducers = createReducer<TicketsState>(
     }
   }),
   on(loadAllTicketsSuccessAction, (state, action) => {
-    console.log(action);
-    console.log(
-      action.tickets.filter((ticket) => ticket.status === TicketStatus.TO_DO)
-    );
-    console.log(
-      sorted(
-        action.tickets.filter((ticket) => ticket.status === TicketStatus.TO_DO)
-      )
-    );
     const newState = {
       ...state,
       toDo: sorted(
-        action.tickets.filter((ticket) => ticket.status === TicketStatus.TO_DO)
+        action.tickets.filter((ticket) => ticket.status === TicketStatus.toDo)
       ),
       toTest: sorted(
-        action.tickets.filter(
-          (ticket) => ticket.status === TicketStatus.TO_TEST
-        )
+        action.tickets.filter((ticket) => ticket.status === TicketStatus.toTest)
       ),
       done: sorted(
-        action.tickets.filter((ticket) => ticket.status === TicketStatus.DONE)
+        action.tickets.filter((ticket) => ticket.status === TicketStatus.done)
       ),
     };
-    console.log(newState);
     return newState;
   }),
   on(deleteTicketAction, (state, action) => {
@@ -113,26 +99,8 @@ export const ticketsReducers = createReducer<TicketsState>(
   on(resetDbSuccessAction, (state, action) => {
     return { ...state, toDo: db.toDo, toTest: db.toTest, done: db.done };
   }),
-  on(moveItemAction, (state, action) => {
-    const newState = JSON.parse(JSON.stringify(state));
-    if (action.whereTo.listName === action.whereFrom.listName) {
-      moveItemInArray(
-        newState[action.whereTo.listName],
-        action.whereFrom.elementIndex,
-        action.whereTo.elementIndex
-      );
-      newState[action.whereTo.listName] = updatePreviousAndNext(
-        newState[action.whereTo.listName]
-      );
-    } else {
-      transferArrayItem(
-        newState[action.whereFrom.listName],
-        newState[action.whereTo.listName],
-        action.whereFrom.elementIndex,
-        action.whereTo.elementIndex
-      );
-    }
-    return newState;
+  on(moveSuccessAction, (state, action) => {
+    return state;
   }),
   on(genericErrorAction, (state, action) => {
     return { ...state, updateInProgress: false };
@@ -142,9 +110,8 @@ export const ticketsReducers = createReducer<TicketsState>(
   })
 );
 
-function updatePreviousAndNext(arr: FullTicket[]): FullTicket[] {
+function updateNextId(arr: FullTicket[]): FullTicket[] {
   for (let i = 0; i < arr.length; i += 1) {
-    arr[i].previousId = arr[i - 1] ? arr[i - 1].id : null;
     arr[i].nextId = arr[i + 1] ? arr[i + 1].id : null;
   }
   return arr;

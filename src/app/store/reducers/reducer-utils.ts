@@ -1,20 +1,18 @@
 import { FullTicket } from '../../models/ticket';
 
 export function sorted(tickets: FullTicket[]) {
-  const result: FullTicket[] = [];
+  const sortedArray = [];
 
-  const copy: FullTicket[] = JSON.parse(JSON.stringify(tickets));
+  let current = tickets.find((ticket) => ticket.nextId === null);
 
-  const firstIndex = copy.findIndex((ticket) => ticket.previousId === null);
-
-  if (firstIndex > -1) {
-    let curr: any = copy[firstIndex];
-
-    while (curr && curr.nextId !== null) {
-      result.push(curr);
-      curr = copy.find((ticket) => ticket.id === curr.nextId);
+  while (current) {
+    sortedArray.push(current);
+    if (current) {
+      current = tickets.find((ticket) => ticket.nextId === current?.id);
+    } else {
+      throw new Error('found a gap in the linked list of tickets');
     }
-    result.push(curr);
   }
-  return result;
+
+  return sortedArray.reverse();
 }
