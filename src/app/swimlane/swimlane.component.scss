@@ -10,10 +10,8 @@
 .ticket {
   border: 1px solid black;
   border-radius: 4px;
-  margin: 8px;
   cursor: pointer;
   min-height: 60px;
-  padding: 8px;
 }
 
 .cdk-drag-preview {
@@ -41,4 +39,15 @@
 
 .is-root {
   display: none;
+}
+
+.action-buttons button {
+  transition: 0.2s;
+  &:hover {
+    color: black;
+  }
+}
+
+.plus-button {
+  margin-top: 8px;
 }

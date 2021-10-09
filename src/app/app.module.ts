@@ -60,6 +60,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { EffectsModule } from '@ngrx/effects';
 import { TicketEffects } from './store/effects/ticket.effects';
 import { HttpConfigInterceptor } from './services/http-config-interceptor';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 export const materialModules = [
   ClipboardModule,
@@ -126,6 +127,7 @@ export const materialModules = [
     A11yModule,
     materialModules,
     HttpClientModule,
+    FlexLayoutModule,
   ],
   providers: [
     {

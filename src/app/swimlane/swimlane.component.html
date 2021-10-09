@@ -13,7 +13,6 @@
       class="ticket"
       [ngClass]="{ 'is-root': ticket.isRoot }"
     >
-      <div style="font-size: 10px">{{ asTicket(ticket).id }}</div>
       <div>
         <div class="action-buttons">
           <button
@@ -21,6 +20,7 @@
             [disabled]="!ticket.id || (isUpdateInProgress$ | async)"
             aria-label="delete ticket"
             mat-icon-button
+            class="delete-ticket"
           >
             <mat-icon>delete_forever</mat-icon>
           </button>
@@ -29,6 +29,7 @@
             [disabled]="!ticket.id || (isUpdateInProgress$ | async)"
             aria-label="edit ticket"
             mat-icon-button
+            class="edit-ticket"
           >
             <mat-icon>edit</mat-icon>
           </button>
@@ -37,11 +38,13 @@
       </div>
     </div>
   </ng-container>
-  <button
-    (click)="addTicket(status)"
-    [disabled]="isUpdateInProgress$ | async"
-    mat-button
-  >
-    +
-  </button>
+  <div fxLayoutAlign="center" class="plus-button">
+    <button
+      (click)="addTicket(status)"
+      [disabled]="isUpdateInProgress$ | async"
+      mat-button
+    >
+      +
+    </button>
+  </div>
 </div>
