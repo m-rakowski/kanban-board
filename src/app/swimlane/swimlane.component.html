@@ -6,36 +6,37 @@
   cdkDropList
   class="list"
 >
-  <div
-    *ngFor="let ticket of tickets"
-    [cdkDragData]="ticket"
-    cdkDrag
-    class="ticket"
-  >
-    <div style="font-size: 10px">{{ asTicket(ticket).id }}</div>
-
-    <div>
-      <div class="action-buttons">
-        <button
-          (click)="delete(ticket)"
-          [disabled]="!ticket.id || (isUpdateInProgress$ | async)"
-          aria-label="delete ticket"
-          mat-icon-button
-        >
-          <mat-icon>delete_forever</mat-icon>
-        </button>
-        <button
-          (click)="edit(ticket)"
-          [disabled]="!ticket.id || (isUpdateInProgress$ | async)"
-          aria-label="edit ticket"
-          mat-icon-button
-        >
-          <mat-icon>edit</mat-icon>
-        </button>
+  <ng-container *ngFor="let ticket of tickets">
+    <div
+      [cdkDragData]="ticket"
+      cdkDrag
+      class="ticket"
+      [ngClass]="{ 'is-root': ticket.isRoot }"
+    >
+      <div style="font-size: 10px">{{ asTicket(ticket).id }}</div>
+      <div>
+        <div class="action-buttons">
+          <button
+            (click)="delete(ticket)"
+            [disabled]="!ticket.id || (isUpdateInProgress$ | async)"
+            aria-label="delete ticket"
+            mat-icon-button
+          >
+            <mat-icon>delete_forever</mat-icon>
+          </button>
+          <button
+            (click)="edit(ticket)"
+            [disabled]="!ticket.id || (isUpdateInProgress$ | async)"
+            aria-label="edit ticket"
+            mat-icon-button
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+        </div>
+        <div class="ticket-title">{{ asTicket(ticket).title }}</div>
       </div>
-      <div class="ticket-title">{{ asTicket(ticket).title }}</div>
     </div>
-  </div>
+  </ng-container>
   <button
     (click)="addTicket(status)"
     [disabled]="isUpdateInProgress$ | async"

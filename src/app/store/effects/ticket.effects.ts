@@ -73,8 +73,9 @@ export class TicketEffects {
       mergeMap((action) => {
         return this.ticketsService.moveTicket(action.moveRequest).pipe(
           map(() => ({
-            type: '[Ticket] loadAllTicketsAction',
-          }))
+            type: '[Ticket] moveSuccessAction',
+          })),
+          catchError(() => of({ type: '[Ticket] loadAllTicketsAction' }))
         );
       })
     )

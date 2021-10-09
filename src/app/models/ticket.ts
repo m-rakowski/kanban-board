@@ -21,4 +21,5 @@ export interface Ticket {
 export interface FullTicket extends Ticket {
   id: string;
   nextId: string | null;
+  isRoot: boolean;
 }

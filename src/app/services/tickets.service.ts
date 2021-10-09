@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { AppState } from '../board/board.component';
 import { MoveRequest } from '../models/move-request';
+import { GetAllTicketsResult } from '../reducers/get-all-tickets-result';
 
 @Injectable({ providedIn: 'root' })
 export class TicketsService {
@@ -30,7 +31,7 @@ export class TicketsService {
     });
   }
 
-  getAll(ticketStatus?: TicketStatus): Observable<FullTicket[]> {
-    return this.httpClient.get<FullTicket[]>(`/api/tickets`);
+  getAll(): Observable<GetAllTicketsResult> {
+    return this.httpClient.get<GetAllTicketsResult>(`/api/tickets`);
   }
 }

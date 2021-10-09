@@ -42,66 +42,44 @@ export class BoardComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>) {}
 
   drop(event: CdkDragDrop<FullTicket[]>) {
-    const movedTicket =
-      this.allTickets[event.previousContainer.id as 'toDo' | 'toTest' | 'done'][
-        event.previousIndex
-      ];
+    const eventContainerId = event.container.id as 'toDo' | 'toTest' | 'done';
+    const eventPreviousContainerId = event.previousContainer.id as
+      | 'toDo'
+      | 'toTest'
+      | 'done';
+
+    const movedTicket: FullTicket = event.item.data;
 
     if (event.container.id === event.previousContainer.id) {
-      let copy = JSON.parse(
-        JSON.stringify(
-          this.allTickets[event.container.id as 'toDo' | 'toTest' | 'done']
-        )
-      );
+      const copy = JSON.parse(JSON.stringify(event.container.data));
       moveItemInArray(copy, event.previousIndex, event.currentIndex);
-      this.allTickets[event.container.id as 'toDo' | 'toTest' | 'done'] = copy;
+      this.allTickets[eventContainerId] = copy;
     } else {
-      let copyFrom = JSON.parse(
-        JSON.stringify(
-          this.allTickets[
-            event.previousContainer.id as 'toDo' | 'toTest' | 'done'
-          ]
-        )
+      const previousContainerDataCopy = JSON.parse(
+        JSON.stringify(event.previousContainer.data)
       );
-      let copyTo = JSON.parse(
-        JSON.stringify(
-          this.allTickets[event.container.id as 'toDo' | 'toTest' | 'done']
-        )
+      const containerDataCopy = JSON.parse(
+        JSON.stringify(event.container.data)
       );
+
       transferArrayItem(
-        copyFrom,
-        copyTo,
+        previousContainerDataCopy,
+        containerDataCopy,
         event.previousIndex,
         event.currentIndex
       );
-      this.allTickets[
-        event.previousContainer.id as 'toDo' | 'toTest' | 'done'
-      ] = copyFrom;
-      this.allTickets[event.container.id as 'toDo' | 'toTest' | 'done'] =
-        copyTo;
+      this.allTickets[eventPreviousContainerId] = previousContainerDataCopy;
+      this.allTickets[eventContainerId] = containerDataCopy;
     }
 
-    const beforeThisOne =
-      this.allTickets[event.container.id as 'toDo' | 'toTest' | 'done'][
-        event.currentIndex + 1
-      ];
     const afterThisOne =
-      this.allTickets[event.container.id as 'toDo' | 'toTest' | 'done'][
-        event.currentIndex - 1
-      ];
-
-    let fromListStatus: TicketStatus = event.previousContainer
-      .id as TicketStatus;
-    let toListStatus: TicketStatus = event.container.id as TicketStatus;
+      this.allTickets[eventContainerId][event.currentIndex - 1] ??
+      this.allTickets[eventContainerId][0];
 
     const moveRequest: MoveRequest = {
-      movedTicket,
-      afterThisOne,
-      beforeThisOne,
-      fromListStatus,
-      toListStatus,
+      movedTicketId: movedTicket.id,
+      afterThisOneId: afterThisOne.id,
     };
-    console.log(moveRequest);
     this.store.dispatch(
       moveAction({
         moveRequest,

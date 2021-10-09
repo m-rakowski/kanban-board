@@ -1,5 +1,4 @@
 import { createReducer, on } from '@ngrx/store';
-import { FullTicket, TicketStatus } from '../../models/ticket';
 import {
   addTicketAction,
   addTicketSuccessAction,
@@ -14,7 +13,7 @@ import {
   updateTicketSuccessAction,
 } from '../actions/ticket.actions';
 import { db } from '../../sample.db';
-import { sorted } from './reducer-utils';
+import { FullTicket } from '../../models/ticket';
 
 export const initialState: TicketsState = {
   toDo: [],
@@ -73,15 +72,7 @@ export const ticketsReducers = createReducer<TicketsState>(
   on(loadAllTicketsSuccessAction, (state, action) => {
     const newState = {
       ...state,
-      toDo: sorted(
-        action.tickets.filter((ticket) => ticket.status === TicketStatus.toDo)
-      ),
-      toTest: sorted(
-        action.tickets.filter((ticket) => ticket.status === TicketStatus.toTest)
-      ),
-      done: sorted(
-        action.tickets.filter((ticket) => ticket.status === TicketStatus.done)
-      ),
+      ...action.tickets,
     };
     return newState;
   }),

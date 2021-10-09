@@ -2,6 +2,7 @@ import { createAction, props, union } from '@ngrx/store';
 import { FullTicket, Ticket } from '../../models/ticket';
 import { DbModel } from '../../models/db-model';
 import { MoveRequest } from '../../models/move-request';
+import { GetAllTicketsResult } from '../../reducers/get-all-tickets-result';
 
 export const moveAction = createAction(
   '[Ticket] moveAction',
@@ -54,7 +55,7 @@ export const resetDbSuccessAction = createAction(
 export const loadAllTicketsSuccessAction = createAction(
   '[Ticket] loadAllTicketsSuccessAction',
   props<{
-    tickets: FullTicket[];
+    tickets: GetAllTicketsResult;
   }>()
 );
 
