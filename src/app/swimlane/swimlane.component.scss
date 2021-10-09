@@ -9,6 +9,7 @@
 
 .ticket {
   border: 1px solid black;
+  margin-top: 8px;
   border-radius: 4px;
   cursor: pointer;
   min-height: 60px;
@@ -43,6 +44,7 @@
 
 .action-buttons button {
   transition: 0.2s;
+
   &:hover {
     color: black;
   }
