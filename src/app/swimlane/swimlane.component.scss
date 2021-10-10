@@ -8,7 +8,7 @@
 }
 
 .ticket {
-  border: 1px solid black;
+  background-color: rgb(245, 245, 245);
   margin-top: 8px;
   border-radius: 4px;
   cursor: pointer;
@@ -24,6 +24,7 @@
 }
 
 .ticket-title {
+  font-weight: 300;
   padding: 12px;
   word-break: break-all;
 }
