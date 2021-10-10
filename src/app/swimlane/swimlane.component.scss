@@ -12,7 +12,8 @@
   margin-top: 8px;
   border-radius: 4px;
   cursor: pointer;
-  min-height: 60px;
+  min-height: 83px;
+  padding: 8px;
 }
 
 .cdk-drag-preview {
@@ -25,8 +26,8 @@
 
 .ticket-title {
   font-weight: 300;
-  padding: 12px;
   word-break: break-all;
+  margin-top: 8px;
 }
 
 .action-buttons {

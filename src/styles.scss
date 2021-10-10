@@ -24,3 +24,17 @@ h2 {
 .mat-form-field {
   width: 100%;
 }
+
+body {
+  .mat-icon-button {
+    width: 24px;
+    height: 22px;
+    line-height: 20px;
+  }
+
+  .mat-icon {
+    height: 22px;
+    width: 22px;
+    font-size: 18px;
+  }
+}

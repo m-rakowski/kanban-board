@@ -11,8 +11,7 @@ import { FullTicket } from '../models/ticket';
 export class AddEditTicketDialogComponent implements OnInit {
   title = new FormControl(null, [
     Validators.required,
-    Validators.minLength(3),
-    Validators.maxLength(15),
+    Validators.maxLength(512),
   ]);
   content = new FormControl(null, [Validators.required]);
   formGroup: FormGroup;
