@@ -14,7 +14,7 @@ export class AddEditTicketDialogComponent implements OnInit {
     Validators.minLength(3),
     Validators.maxLength(15),
   ]);
-  content = new FormControl('null', [Validators.required]);
+  content = new FormControl(null, [Validators.required]);
   formGroup: FormGroup;
 
   constructor(

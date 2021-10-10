@@ -18,6 +18,8 @@
       />
       <mat-error>{{ formGroup.get("title")?.errors | json }}</mat-error>
     </mat-form-field>
-    <button mat-stroked-button type="submit">Save</button>
+    <button mat-flat-button type="submit" class="save-button" color="primary">
+      Save
+    </button>
   </form>
 </div>
